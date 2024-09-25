@@ -1,0 +1,95 @@
+
+@font-face {
+    font-family: 'Quicksand';
+    src: url('../assets/fonts/Quicksand.otf');
+}
+
+body {
+    font-family: "Quicksand", sans-serif;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+.NavBar {
+    display: flex;
+    position: fixed;
+    height: 100%;
+    background-color: var(--Black);
+}
+
+.ProfileImgBG {
+    top: 40px;
+    border-top-right-radius: 45px;
+    border-bottom-right-radius: 45px;
+    display: flex;
+    position: fixed;
+    background-color: var(--Green);
+    margin: 0;
+    box-sizing: border-box;
+    padding: 5px;
+    padding-left: 85px;
+}
+
+.ProfileImg {
+    margin: 0;
+    width: 70px;
+    height: 70px;
+    border-radius: 45px;
+    background-color: var(--White);
+}
+
+.ButtonsSection {
+    margin: 10px;
+    margin-top: 140px;
+    display: flex;
+    flex-direction: column;
+    transition: 0.5s;
+}
+
+.MenuBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--Blue);
+    border: none;
+    margin-bottom: 10px;
+    border-radius: 30px;
+    transition: 0.5s;
+}
+
+.MenuBtn:hover {
+    background-color: var(--Green);
+}
+
+.BtnIcon {
+    color: var(--DarkBlue);
+    width: 30px;
+    height: 30px;
+    margin: 10px;
+    transition: 0.5s;
+}
+
+.MenuBtn:hover .BtnIcon {
+    color: var(--White);
+}
+
+.MenuBtnText {
+    font-family: 'Quicksand', sans-serif;
+    color: var(--DarkBlue);
+    font-size: 15px;
+    width: 0px;
+    transition: 0.5s;
+    overflow: hidden;
+    text-align: center;
+    transition: 0.5s;
+}
+
+.MenuBtn:hover .MenuBtnText {
+    color: var(--White);
+}
+
+.ProfileImgBG:hover ~ .ButtonsSection .MenuBtn .MenuBtnText{
+    width: 100px;
+}

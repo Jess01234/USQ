@@ -12,11 +12,75 @@ body {
     margin: 0;
 }
 
+<<<<<<< HEAD
 .NavBar {
     display: flex;
     position: fixed;
     height: 100%;
     background-color: var(--Black);
+=======
+.Window {
+    display: flex;
+    position: fixed;
+    right: 0px;
+    bottom: 0px;
+    margin: 20px;
+}
+
+.BtnAdd {
+    display: flex;
+    background-color: var(--Blue);
+    border: none;
+    border-radius: var(--Border);
+    border-bottom-right-radius: 0px;
+}
+
+.BtnAdd:hover {
+    background-color: var(--Green);
+}
+
+.BtnAdd:hover .BtnIcon {
+    rotate: -360deg;
+}
+
+.BtnAdd:hover .MenuBtnText{
+    width: 90px;
+}
+
+.BlackBG {
+    position: fixed;
+    background-color: var(--TranslucentBlack);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+#PopUp {
+    display: none;
+}
+
+.NavBar {
+    display: flex;
+    flex-direction: column-reverse;
+    position: fixed;
+    height: 100%;
+    background-color: var(--Black);
+    width: 80px;
+    transition: 0.5s;
+    box-sizing: border-box;
+    padding: 20px;
+    border-top-right-radius: var(--Border);
+    border-bottom-right-radius: var(--Border);
+}
+
+.NavLogo {
+    position: relative;
+    width: 100%;
+    opacity: 0%;
+    transition: 0.5s;
+>>>>>>> 179d70c (first commit)
 }
 
 .ProfileImgBG {
@@ -30,6 +94,10 @@ body {
     box-sizing: border-box;
     padding: 5px;
     padding-left: 85px;
+<<<<<<< HEAD
+=======
+    z-index: 1;
+>>>>>>> 179d70c (first commit)
 }
 
 .ProfileImg {
@@ -46,9 +114,18 @@ body {
     display: flex;
     flex-direction: column;
     transition: 0.5s;
+<<<<<<< HEAD
 }
 
 .MenuBtn {
+=======
+    position: absolute;
+}
+
+.MenuBtn {
+    width: 60px;
+    height: 60px;
+>>>>>>> 179d70c (first commit)
     display: flex;
     align-items: center;
     justify-content: center;
@@ -61,6 +138,10 @@ body {
 
 .MenuBtn:hover {
     background-color: var(--Green);
+<<<<<<< HEAD
+=======
+    width: 160px;
+>>>>>>> 179d70c (first commit)
 }
 
 .BtnIcon {
@@ -71,10 +152,13 @@ body {
     transition: 0.5s;
 }
 
+<<<<<<< HEAD
 .MenuBtn:hover .BtnIcon {
     color: var(--White);
 }
 
+=======
+>>>>>>> 179d70c (first commit)
 .MenuBtnText {
     font-family: 'Quicksand', sans-serif;
     color: var(--DarkBlue);
@@ -86,10 +170,35 @@ body {
     transition: 0.5s;
 }
 
+<<<<<<< HEAD
 .MenuBtn:hover .MenuBtnText {
     color: var(--White);
 }
 
 .ProfileImgBG:hover ~ .ButtonsSection .MenuBtn .MenuBtnText{
     width: 100px;
+=======
+.AddIcon {
+    color: var(--White);
+}
+
+.MenuBtn:hover .MenuBtnText{
+    width: 100px;
+}
+
+.ProfileImgBG:hover ~ .ButtonsSection .MenuBtn .MenuBtnText{
+    width: 100px;
+}
+
+.ProfileImgBG:hover ~ .ButtonsSection .MenuBtn{
+    width: 160px;
+}
+
+.ProfileImgBG:hover ~ .NavBar {
+    width: 180px;
+}
+
+.ProfileImgBG:hover ~ .NavBar .NavLogo {
+    opacity: 100%;
+>>>>>>> 179d70c (first commit)
 }

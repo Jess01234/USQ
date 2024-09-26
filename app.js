@@ -5,8 +5,8 @@ const app = express();
 const cookieParser = require('cookie-parser');
 
 app.set('views', path.join(__dirname, 'views' ));
-app.engine ('html ', require('ejs').renderFile);
-app.set ('view engine', 'html');
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
 
 app.use (express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-    res.render('login');
+    res.redirect('main'); // Renderiza la página de login
 });
 
 app.listen(3000, () => {

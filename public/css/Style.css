@@ -12,19 +12,20 @@ body {
     margin: 0;
 }
 
-<<<<<<< HEAD
 .NavBar {
     display: flex;
     position: fixed;
     height: 100%;
     background-color: var(--Black);
-=======
+}
+
 .Window {
     display: flex;
     position: fixed;
     right: 0px;
     bottom: 0px;
-    margin: 20px;
+    margin: var(--margin);
+    z-index: 2;
 }
 
 .BtnAdd {
@@ -59,6 +60,108 @@ body {
 
 #PopUp {
     display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    align-items: end;
+    justify-content: end;
+}
+
+.AddPopup {
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: var(--Black);
+    margin: var(--margin);
+    border-radius: var(--Border);
+    border-bottom-right-radius: 0px;
+    flex-direction: column;
+}
+
+.TitlePopUp {
+    text-align: center;
+    color: var(--DarkBlue);
+    background-color: var(--Green);
+    border-radius: var(--Border);
+    padding: var(--smallmargin);
+    margin: var(--margin);
+}
+
+.PublicProfile {
+    display: flex;
+}
+
+.PublicProfileIMG {
+    width: 100px;
+    height: 100px;
+    background-color: var(--White);
+    border-radius: 50%;
+    margin: var(--margin);
+}
+
+.EditImg {
+    position: relative;
+    height: 120px;
+}
+
+.EditImgBtn {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--Blue);
+    border: none;
+    border-radius: 30px;
+    transition: 0.5s;
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+}
+
+.EditImgBtn:hover {
+    background-color: var(--Green);
+}
+.Data {
+    display: flex;
+    flex-direction: column;
+}
+
+.InputText {
+    font-family: 'Quicksand', sans-serif;
+    margin: var(--margin);
+    margin-top: var(--smallmargin);
+    margin-bottom: var(--smallmargin);
+    color: var(--DarkBlue);
+    background-color: var(--White);
+    border: none;
+    border-radius: var(--Border);
+    font-size: var(--fonts);
+    text-align: center;
+}
+
+.InputText:focus {
+    border: solid;
+    border-color: var(--Green);
+}
+
+.Btn {
+    margin: var(--margin);
+    font-family: 'Quicksand', sans-serif;
+    font-size: var(--fonts);
+    background-color: var(--Blue);
+    border: none;
+    padding: var(--margin);
+    border-radius: var(--Border);
+    color: var(--DarkBlue);
+    transition: 0.5s;
+}
+
+.Btn:hover {
+    background-color: var(--Green);
 }
 
 .NavBar {
@@ -70,7 +173,7 @@ body {
     width: 80px;
     transition: 0.5s;
     box-sizing: border-box;
-    padding: 20px;
+    padding: var(--margin);
     border-top-right-radius: var(--Border);
     border-bottom-right-radius: var(--Border);
 }
@@ -80,7 +183,6 @@ body {
     width: 100%;
     opacity: 0%;
     transition: 0.5s;
->>>>>>> 179d70c (first commit)
 }
 
 .ProfileImgBG {
@@ -94,10 +196,7 @@ body {
     box-sizing: border-box;
     padding: 5px;
     padding-left: 85px;
-<<<<<<< HEAD
-=======
     z-index: 1;
->>>>>>> 179d70c (first commit)
 }
 
 .ProfileImg {
@@ -114,55 +213,40 @@ body {
     display: flex;
     flex-direction: column;
     transition: 0.5s;
-<<<<<<< HEAD
+    position: fixed;
 }
 
-.MenuBtn {
-=======
-    position: absolute;
-}
 
 .MenuBtn {
     width: 60px;
     height: 60px;
->>>>>>> 179d70c (first commit)
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: var(--Blue);
     border: none;
-    margin-bottom: 10px;
+    margin-bottom: var(--smallmargin);
     border-radius: 30px;
     transition: 0.5s;
 }
 
 .MenuBtn:hover {
     background-color: var(--Green);
-<<<<<<< HEAD
-=======
     width: 160px;
->>>>>>> 179d70c (first commit)
 }
 
 .BtnIcon {
     color: var(--DarkBlue);
     width: 30px;
     height: 30px;
-    margin: 10px;
+    margin: var(--smallmargin);
     transition: 0.5s;
 }
 
-<<<<<<< HEAD
-.MenuBtn:hover .BtnIcon {
-    color: var(--White);
-}
-
-=======
->>>>>>> 179d70c (first commit)
 .MenuBtnText {
     font-family: 'Quicksand', sans-serif;
     color: var(--DarkBlue);
-    font-size: 15px;
+    font-size: var(--fonts);
     width: 0px;
     transition: 0.5s;
     overflow: hidden;
@@ -170,14 +254,10 @@ body {
     transition: 0.5s;
 }
 
-<<<<<<< HEAD
-.MenuBtn:hover .MenuBtnText {
-    color: var(--White);
-}
-
 .ProfileImgBG:hover ~ .ButtonsSection .MenuBtn .MenuBtnText{
     width: 100px;
-=======
+}
+
 .AddIcon {
     color: var(--White);
 }
@@ -200,5 +280,4 @@ body {
 
 .ProfileImgBG:hover ~ .NavBar .NavLogo {
     opacity: 100%;
->>>>>>> 179d70c (first commit)
 }

@@ -69,6 +69,25 @@ body {
     justify-content: end;
 }
 
+.IMGBG {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.CenteredPopup {
+    display: flex;
+    bottom: 0;
+    right: 0;
+    background-color: var(--Black);
+    margin: var(--margin);
+    border-radius: var(--Border);
+    flex-direction: column;
+}
+
 .AddPopup {
     display: flex;
     position: absolute;

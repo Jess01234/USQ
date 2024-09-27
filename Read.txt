@@ -2,7 +2,7 @@
 
 npm install express-generator -g
 express express-locallibrary-tutorial --view=ejs
-npm install
+npm install ejs
 
 
 Ejecutar proyecto:

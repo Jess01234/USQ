@@ -17,6 +17,7 @@ body {
     position: fixed;
     height: 100%;
     background-color: var(--Black);
+    z-index: 1;
 }
 
 .Window {
@@ -25,7 +26,7 @@ body {
     right: 0px;
     bottom: 0px;
     margin: var(--margin);
-    z-index: 2;
+    z-index: 3;
 }
 
 .BtnAdd {
@@ -46,6 +47,38 @@ body {
 
 .BtnAdd:hover .MenuBtnText{
     width: 90px;
+}
+
+.TitleBG {
+    background-color: var(--Black);
+    margin: var(--margin);
+    border-radius: var(--Border);
+    align-items: center;
+    justify-content: center;
+}
+
+.Content {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    box-sizing: border-box;
+    padding-left: 150px;
+    transition: 0.5s;
+}
+
+.ProfileImgBG:hover ~ .Content {
+    padding-left: 180px;
+}
+
+.Title {
+    color: var(--Green);
+    font-size: 20px;
+    padding: var(--margin);
+    text-align: center;
 }
 
 .BlackBG {
@@ -163,11 +196,16 @@ body {
 .EditImgBtn:hover {
     background-color: var(--Green);
 }
+
 .Data {
     display: flex;
     flex-direction: column;
+}
+
+.DataCentered {
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
 }
 
 .LoginLogo {
@@ -242,7 +280,7 @@ body {
     box-sizing: border-box;
     padding: 5px;
     padding-left: 85px;
-    z-index: 1;
+    z-index: 2;
 }
 
 .ProfileImg {
@@ -260,6 +298,7 @@ body {
     flex-direction: column;
     transition: 0.5s;
     position: fixed;
+    z-index: 1;
 }
 
 

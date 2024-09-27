@@ -1,0 +1,9 @@
+
+
+npm install express-generator -g
+express express-locallibrary-tutorial --view=ejs
+npm install
+
+
+Ejecutar proyecto:
+npm start

@@ -76,7 +76,25 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-image: url();
+    background-image: url("../assets/BGLogin.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    backdrop-filter: brightness(0.3);
+}
+
+.CheckBoxContainer {
+    display: flex;
+}
+
+.CheckBoxText {
+    color: var(--Green);
+}
+
+.TextButton {
+    color: var(--Green);
+    font-family: 'Quicksand', sans-serif;
+    background-color: transparent;
+    border: none;
 }
 
 .CenteredPopup {
@@ -148,6 +166,14 @@ body {
 .Data {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.LoginLogo {
+    width: 100px;
+    height: auto;
+    margin: var(--smallmargin);
 }
 
 .InputText {

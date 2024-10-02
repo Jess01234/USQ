@@ -10,5 +10,9 @@
     --Border: 45px;
     --margin: 20px;
     --smallmargin: 10px;
-    --fonts: 15px
+    --fonts: 15px;
+    --fontt: 20px;
+
+    --MaxTableElement: 3000px;
+    --MinTableElement: 250px;
 }

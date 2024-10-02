@@ -10,21 +10,11 @@ var indexRouter = require('./routes/index');
 
 var app = express();
 
-
-// var port = 3000;
-// app.listen(port, '0.0.0.0', () => {
-//     console.log(`Servidor escuchando en http://0.0.0.0:${port}`);
-// });
-
 const connection = MySql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '',
     database: 'urbansolar'
-    // host: '192.168.1.78',
-    // user: 'root',
-    // password: '',
-    // database: 'test'
 });
 
 connection.connect((err) => {

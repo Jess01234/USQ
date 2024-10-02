@@ -414,6 +414,7 @@ div::-webkit-scrollbar {
 .TableTitle {
     font-family: 'Quicksand', sans-serif;
     font-size: var(--fonts);
+    width: 100%;
     text-align: center;
     color: var(--Black);
     margin-left: var(--margin);

@@ -223,6 +223,11 @@ body {
     text-align: center;
 }
 
+.Searcher {
+    margin-left: 1px;
+    margin-right: 1px;
+}
+
 .InputText:focus {
     border: solid;
     border-color: var(--Green);
@@ -373,10 +378,19 @@ body {
     overflow: hidden;
 }
 
+.TitleTableActions {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+    margin-left: var(--smallmargin);
+    margin-right: var(--smallmargin);
+}
+
 .TableData{
     display: flex;
     width: 100%;
-    height: 200px;
+    height: 392px;
     overflow: scroll;
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -392,6 +406,9 @@ div::-webkit-scrollbar {
     justify-content: center;
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .TableTitle {
@@ -399,6 +416,8 @@ div::-webkit-scrollbar {
     font-size: var(--fonts);
     text-align: center;
     color: var(--Black);
+    margin-left: var(--margin);
+    margin-right: var(--margin);
 }
 
 .InfoTitleBG {
@@ -429,12 +448,6 @@ th, td {
     border-bottom: 5px solid var(--ClearBlue);
 }
 
-.NotifyContainer {
-    border-collapse: collapse;
-    border: none;
-    border-color: transparent;
-}
-
 tbody {
     width: 100%;
 }
@@ -451,6 +464,11 @@ tbody {
     min-width: var(--MinTableElement);
     scrollbar-width: none;
     -ms-overflow-style: none;
+}
+
+.RowButtons {
+    display: flex;
+    flex-direction: row;
 }
 
 .NotifyScroll {
@@ -470,13 +488,122 @@ tbody {
 .NotifyText {
     display: -webkit-box;
     background-color: var(--White);
-    margin: var(--smallmargin);
-    border-radius: var(--Border);
+    color: var(--DarkBlue);
+    margin-top: 2px;
+    margin-bottom: 2px;
     padding: var(--margin);
-    padding-top: 0px;
-    padding-bottom: 0px;
+    padding-top: 10px;
+    padding-bottom: 3px;
     line-clamp: 3;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
     overflow: hidden;
+}
+
+.SmallMenuBtn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--Blue);
+    border: none;
+    margin-left: var(--smallmargin);
+    border-radius: var(--Border);
+    transition: 0.5s;
+}
+
+.SmallMenuBtn:hover {
+    background-color: var(--Green);
+    width: 160px;
+}
+
+.ActionList {
+    min-width: 200px;
+    width: 200px;
+}
+
+.SmallBtnIcon {
+    color: var(--DarkBlue);
+    width: 30px;
+    height: 30px;
+    margin: 0x;
+    transition: 0.5s;
+}
+
+.SmallMenuBtnText {
+    font-family: 'Quicksand', sans-serif;
+    color: var(--DarkBlue);
+    font-size: var(--fonts);
+    width: 0px;
+    transition: 0.5s;
+    overflow: hidden;
+    text-align: center;
+    transition: 0.5s;
+}
+
+.SmallMenuBtn:hover .SmallMenuBtnText{
+    width: 100px;
+}
+
+.MenuBtnIconOnly {
+    display: flex;
+    background-color: var(--Black);
+    border-radius: var(--Border);
+    border: none;
+    width: 30px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    transition: 0.5s;
+}
+
+.MenuBtnIconOnly:hover {
+    background-color: var(--DarkBlue);
+}
+
+.TitleBtn {
+    display: flex;
+    background-color: var(--Black);
+    border-radius: var(--Border);
+    border: none;
+    width: 30px;
+    height: 30px;
+    align-items: center;
+    justify-content: end;
+    transition: 0.5s;
+}
+
+.TitleBtn:hover {
+    background-color: var(--DarkBlue);
+    width: 150px;
+}
+
+.TitleBtnText {
+    overflow: hidden;
+    font-family: 'Quicksand', sans-serif;
+    font-size: var(--fonts);
+    width: 0px;
+    color: var(--Green);
+    transition: 0.5s;
+}
+
+.TitleBtn:hover .TitleBtnText {
+    margin-left: var(--smallmargin);
+    margin-right: var(--smallmargin);
+    width: 60px;
+}
+
+.TitleBtnIcon {
+    color: var(--Green);
+    width: 20px;
+    transition: 0.5s;
+    height: 20px;
+}
+
+@media (max-width: 800px) {
+    .TableTitleBG {
+        flex-direction: column;
+    }
+    
 }

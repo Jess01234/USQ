@@ -453,6 +453,15 @@ tbody {
     width: 100%;
 }
 
+.WarningText {
+    margin: 0px;
+    width: 100%;
+    padding-left: var(--smallmargin);
+    padding-right: var(--smallmargin);
+    box-sizing: border-box;
+    color: var(--Warning);
+}
+
 .InfoText {
     color: var(--DarkBlue);
     padding: var(--smallmargin);

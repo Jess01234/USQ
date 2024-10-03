@@ -1,61 +1,60 @@
 const { Console } = require('console');
 var express = require('express');
 var router = express.Router();
-const sql = require('mssql');
+const { connect, conectar, sql } = require('../models/db');
 
-const config = {
-    server: '192.168.1.78',
-    user: 'sa',
-    password: '12345',
-    database: 'Urban_Solar'
-};
+conectar();
 
-async function connectToDatabase() {
-    try {
-        let pool = await sql.connect(config);
-        console.log('Conexión exitosa a la base de datos SQL Server');
-
-        // let result = await pool.request().query('SELECT * FROM TuTabla');
-        // console.log(result);
-
-    } catch (err) {
-        console.error('Error al conectarse a la base de datos:', err);
-    }
-}
-
-connectToDatabase();
-
-/* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', async function(req, res, next) {
 
     const User = req.cookies.User;
-    // var consulta;
-
-    // connection.query('SELECT * FROM `users` WHERE `id` = 1', (err, results) => {
-    //     if(err) throw err;
-    //     consulta = results;
-    //     console.log(consulta);
-    // });
-
+    
     if (!User || User.trim() === '') {
         res.redirect('/login');
-        console.log()
+        console.log(User);
     } else {
-        res.render('index', { Name: User });
+        try {
+            var result = await new sql.Request().query("select Nombre from Usuario where Correo = '" + User + "'");
+            var Res = result.recordset;
+            res.render('index', { Name: Res[0].Nombre });
+        }
+        catch {
+            res.redirect("/login");
+        }
     }
 });
 
-router.post('/', function(req, res, next){
-    const Name = req.body.Name;
-    const Remind = req.body.RememberMe;
-    
-    if (Remind){
-        res.cookie('User', Name);
+router.post('/', async function(req, res, next){
+
+    var Mail = req.body.Mail;
+    var Password = req.body.Password;
+    var Remind = req.body.RememberMe;
+
+    try {
+        var result = await new sql.Request().query("select Nombre, contrasena from Usuario where Correo = '" + Mail + "'");
+        var Res = result.recordset;
+        console.log(String(Res[0].contrasena));
+        if (Res.length > 0){
+            if (Password == String(Res[0].contrasena)){
+                if(Remind) {
+                    res.cookie('User', Mail)
+                    res.render('index', {Name: Res[0].Nombre});
+                }
+                else {
+                    res.cookie('User', Mail, {maxAge: 900000, httpOnly: true});
+                    res.render('index', {Name: Res[0].Nombre});
+                }
+            }
+            else {
+                res.render('login', { Warning : "Contraseña incorrecta" });
+            }
+        }
+        else{
+            res.render('login', { Warning : "El usuario no existe" });
+        }
+    } catch (err) {
+        res.render('login', { Warning: "Usuario o contraseña incorrectos"});
     }
-    else{
-        res.cookie('User', Name, { maxAge: 900000, httpOnly: true });
-    }
-    res.render('index', {Name: Name});
 });
 
 router.get('/login', function(req, res, next){
@@ -63,14 +62,14 @@ router.get('/login', function(req, res, next){
     const User = req.cookies.User;
     
     if (!User || User.trim() === '') {
-        res.render('login');
+        res.render('login', {Warning : ""});
     } else {
         res.redirect('/');
     }
 });
 
 router.post('/login', function(req, res, next){
-    res.render('login');
+    res.render('login', {Warning : ""});
 });
 
 module.exports = router;

@@ -4,26 +4,10 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var MySql = require('mysql2');
 
 var indexRouter = require('./routes/index');
 
 var app = express();
-
-const connection = MySql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'urbansolar'
-});
-
-connection.connect((err) => {
-    if (err) {
-      console.error('Error al conectar a la base de datos:', err);
-      return;
-    }
-    console.log('Conectado a la base de datos MySQL.');
-});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

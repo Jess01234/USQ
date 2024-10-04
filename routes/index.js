@@ -14,9 +14,17 @@ router.get('/', async function(req, res, next) {
         console.log(User);
     } else {
         try {
-            var result = await new sql.Request().query("select Nombre from Usuario where Correo = '" + User + "'");
+            var result = await new sql.Request().query("select * from Usuario where Correo = '" + User + "'");
             var Res = result.recordset;
-            res.render('index', { Name: Res[0].Nombre });
+            
+            var Profile = String(Res[0].Perfil)
+            
+            if (Profile === "Admin"){
+                res.render('index', {Name: Res[0].Nombre});
+            }
+            else {
+                res.render('employee', {Name: Res[0].Nombre});
+            }
         }
         catch {
             res.redirect("/login");
@@ -31,18 +39,25 @@ router.post('/', async function(req, res, next){
     var Remind = req.body.RememberMe;
 
     try {
-        var result = await new sql.Request().query("select Nombre, contrasena from Usuario where Correo = '" + Mail + "'");
+        var result = await new sql.Request().query("select * from Usuario where Correo = '" + Mail + "'");
         var Res = result.recordset;
         console.log(String(Res[0].contrasena));
         if (Res.length > 0){
             if (Password == String(Res[0].contrasena)){
                 if(Remind) {
                     res.cookie('User', Mail)
-                    res.render('index', {Name: Res[0].Nombre});
                 }
                 else {
                     res.cookie('User', Mail, {maxAge: 900000, httpOnly: true});
+                }
+
+                var Profile = String(Res[0].Perfil)
+
+                if (Profile === "Admin"){
                     res.render('index', {Name: Res[0].Nombre});
+                }
+                else {
+                    res.render('employee', {Name: Res[0].Nombre});
                 }
             }
             else {

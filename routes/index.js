@@ -125,7 +125,7 @@ router.get('/Profile', async function (req, res, next) {
             var result = await new sql.Request().query("select * from Usuario where Correo = '" + User + "'");
             var Res = result.recordset[0];
 
-            res.render('Profile', { User: Res });
+            res.render('Profile', { User: Res, Warning: ""});
         }
         catch {
             res.redirect("/login");
@@ -144,7 +144,7 @@ router.post('/Profile', async function (req, res, next) {
             var result = await new sql.Request().query("select * from Usuario where Correo = '" + User + "'");
             var Res = result.recordset[0];
 
-            res.render('Profile', { User: Res });
+            res.render('Profile', { User: Res, Warning: "" });
         }
         catch {
             res.redirect("/login");

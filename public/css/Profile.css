@@ -32,6 +32,16 @@ body {
     align-items: center;
 }
 
+.WarningText {
+    margin: 0px;
+    width: 100%;
+    text-align: center;
+    padding-left: var(--smallmargin);
+    padding-right: var(--smallmargin);
+    box-sizing: border-box;
+    color: var(--Warning);
+}
+
 .InputText {
     font-family: 'Quicksand', sans-serif;
     margin: var(--margin);

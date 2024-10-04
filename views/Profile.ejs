@@ -26,7 +26,12 @@
             <input name="LastName" class="InputText" placeholder="Apellido paterno" type="text" value="<%= User.ApellidoPaterno %>">
             <input name="LastName1" class="InputText" placeholder="Apellido materno" type="text" value="<%= User.ApellidoMaterno %>">
             <input name="Phone" class="InputText" placeholder="Telefono" type="text" value="<%= User.Telefono %>">
-            <input name="Mail" class="InputText" placeholder="Correo" type="text" value="<%= User.Correo %>">
+            <% if (User.Perfil == "Admin" ) { %>
+                <input name="Mail" class="InputText" placeholder="Correo" type="text" value="<%= User.Correo %>">
+            <% } %>
+            <% if (User.Perfil == "Empleado" ) { %>
+                <input style="display: none;" name="Mail" class="InputText" placeholder="Correo" type="text" value="<%= User.Correo %>">
+            <% } %>
             <input name="Password" class="InputText" placeholder="Contraseña" type="text" value="<%= User.contrasena %>">
             <div class="ButtonsSection">
                 <Button class="TopMenuBtn" type="submit">
@@ -38,6 +43,7 @@
                     <p class="TopMenuBtnText">Cerrar sesion</p>
                 </Button>
             </div>
+            <p class="WarningText"><%= Warning %></p>
         </div>
     </form>
     

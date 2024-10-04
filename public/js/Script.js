@@ -1,3 +1,4 @@
+const { format } = require("path");
 
 
 function HideWindow(){
@@ -13,3 +14,9 @@ function ShowWindow(){
 
     PopUp.style.display = 'flex';
 };
+
+function ChangeForm(ElementId, action) {
+    var Form = document.getElementById(ElementId);
+    Form.setAttribute('action', action);
+    Form.submit();
+}

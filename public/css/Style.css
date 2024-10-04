@@ -223,14 +223,24 @@ body {
     text-align: center;
 }
 
-.Searcher {
-    margin-left: 1px;
-    margin-right: 1px;
+.NoBtn {
+    border: none;
+    background-color: transparent;
+    margin: none;
+    cursor: pointer;
+    margin: 0px;
+    padding: 0px;
+    transition: 0.5s;
 }
 
 .InputText:focus {
     border: solid;
     border-color: var(--Green);
+}
+
+.Searcher {
+    margin-left: 1px;
+    margin-right: 1px;
 }
 
 .Btn {
@@ -282,6 +292,25 @@ body {
     padding: 5px;
     padding-left: 85px;
     z-index: 2;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    transition: 0.5s;
+}
+
+.ProfileText {
+    color: var(--DarkBlue);
+    font-family: 'Quicksand', sans-serif;
+    font-size: var(--fontt);
+    margin-left: var(--smallmargin);
+    margin-right: var(--smallmargin);
+    overflow: hidden;
+    width: 0px;
+    transition: 0.5s;
+}
+
+.ProfileImgBG:hover .ProfileText {
+    width: 50px;
 }
 
 .ProfileImg {
@@ -290,6 +319,7 @@ body {
     height: 70px;
     border-radius: 45px;
     background-color: var(--White);
+    transition: 0.5s;
 }
 
 .ButtonsSection {
@@ -301,7 +331,6 @@ body {
     position: fixed;
     z-index: 1;
 }
-
 
 .MenuBtn {
     width: 60px;
@@ -344,12 +373,12 @@ body {
     width: 100px;
 }
 
-.AddIcon {
-    color: var(--White);
-}
-
 .MenuBtn:hover .MenuBtnText{
     width: 100px;
+}
+
+.AddIcon {
+    color: var(--White);
 }
 
 .ProfileImgBG:hover ~ .ButtonsSection .MenuBtn .MenuBtnText{

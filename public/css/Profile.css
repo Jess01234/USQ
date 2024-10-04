@@ -29,12 +29,33 @@ body {
     border-bottom-right-radius: var(--Border);
     display: flex;
     justify-content: center;
+    align-items: center;
+}
+
+.InputText {
+    font-family: 'Quicksand', sans-serif;
+    margin: var(--margin);
+    margin-top: var(--smallmargin);
+    margin-bottom: var(--smallmargin);
+    color: var(--DarkBlue);
+    background-color: var(--White);
+    border: none;
+    border-radius: var(--Border);
+    font-size: var(--fonts);
+    text-align: center;
+}
+
+.InputText:focus {
+    border: solid;
+    border-color: var(--Green);
 }
 
 .Title {
     font-family: 'Quicksand', sans-serif;
     font-size: var(--fontt);
     color: var(--White);
+    width: 100%;
+    text-align: center;
 }
 
 .ProfileImg {
@@ -118,4 +139,46 @@ body {
     .Logo {
         width: 70%;
     }
+}
+
+
+.TopMenuBtn {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--Blue);
+    border: none;
+    margin: var(--smallmargin);
+    border-radius: 30px;
+    transition: 0.5s;
+}
+
+.TopMenuBtn:hover {
+    background-color: var(--Green);
+    width: 160px;
+}
+
+.TopBtnIcon {
+    color: var(--DarkBlue);
+    width: 30px;
+    height: 30px;
+    margin: var(--smallmargin);
+    transition: 0.5s;
+}
+
+.TopMenuBtnText {
+    font-family: 'Quicksand', sans-serif;
+    color: var(--DarkBlue);
+    font-size: var(--fonts);
+    width: 0px;
+    transition: 0.5s;
+    overflow: hidden;
+    text-align: center;
+    transition: 0.5s;
+}
+
+.TopMenuBtn:hover .TopMenuBtnText{
+    width: 100px;
 }

@@ -11,28 +11,42 @@
 </head>
 <body>
 
-    <div class="ProfileImgBG">
-        <Button class="TopMenuBtn" onclick="history.back()">
-            <svg class="TopBtnIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><circle cx="12" cy="12" r="0" fill="currentColor"><animate fill="freeze" attributeName="r" begin="0.8s" dur="0.2s" values="0;2"/></circle><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="48" stroke-dashoffset="48" d="M4.25 14c0.89 3.45 4.02 6 7.75 6c4.42 0 8 -3.58 8 -8c0 -4.42 -3.58 -8 -8 -8c-2.39 0 -4.53 1.05 -6 2.71l-2 2.29"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.6s" values="48;0"/></path><path fill="currentColor" stroke-width="1" d="M5.63 7.38l0 0l0 0l0 0z" opacity="0"><animate fill="freeze" attributeName="d" begin="0.6s" dur="0.2s" values="M5.63 7.38l0 0l0 0l0 0z;M5.63 7.38L3.5 5.25L3.5 9.5L7.75 9.5z"/><set fill="freeze" attributeName="opacity" begin="0.6s" to="1"/></path></g></svg>
-            <p class="TopMenuBtnText">Regresar</p>
-        </Button>
-        <p class="Title">Perfil</p>
-    </div>
-    
     <form id="UpdateProfile" action="UpdateProfile" method="post">
+        <div class="ProfileImgBG">
+            <Button class="TopMenuBtn" onclick="ChangeForm('UpdateProfile', '/')">
+                <svg class="TopBtnIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><circle cx="12" cy="12" r="0" fill="currentColor"><animate fill="freeze" attributeName="r" begin="0.8s" dur="0.2s" values="0;2"/></circle><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="48" stroke-dashoffset="48" d="M4.25 14c0.89 3.45 4.02 6 7.75 6c4.42 0 8 -3.58 8 -8c0 -4.42 -3.58 -8 -8 -8c-2.39 0 -4.53 1.05 -6 2.71l-2 2.29"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.6s" values="48;0"/></path><path fill="currentColor" stroke-width="1" d="M5.63 7.38l0 0l0 0l0 0z" opacity="0"><animate fill="freeze" attributeName="d" begin="0.6s" dur="0.2s" values="M5.63 7.38l0 0l0 0l0 0z;M5.63 7.38L3.5 5.25L3.5 9.5L7.75 9.5z"/><set fill="freeze" attributeName="opacity" begin="0.6s" to="1"/></path></g></svg>
+                <p class="TopMenuBtnText">Regresar</p>
+            </Button>
+            <p class="Title">Perfil</p>
+        </div>
+        
         <div class="Content">
-            <img class="ProfileImg" src="./assets/Profile.png" alt="">
+            <Button type="button" class="NoBtn">
+                <img class="ProfileImg" src="./assets/Profile.png" onclick="ChangeForm('UpdateProfile', '/')">
+            </Button>
             <input name="Name" class="InputText" placeholder="Nombre" type="text" value="<%= User.Nombre %>">
             <input name="LastName" class="InputText" placeholder="Apellido paterno" type="text" value="<%= User.ApellidoPaterno %>">
             <input name="LastName1" class="InputText" placeholder="Apellido materno" type="text" value="<%= User.ApellidoMaterno %>">
             <input name="Phone" class="InputText" placeholder="Telefono" type="text" value="<%= User.Telefono %>">
             <% if (User.Perfil == "Admin" ) { %>
-                <input name="Mail" class="InputText" placeholder="Correo" type="text" value="<%= User.Correo %>">
+                <input style="display: none;" name="Mail" class="InputText" placeholder="Correo" type="text" value="<%= User.Correo %>">
             <% } %>
             <% if (User.Perfil == "Empleado" ) { %>
                 <input style="display: none;" name="Mail" class="InputText" placeholder="Correo" type="text" value="<%= User.Correo %>">
             <% } %>
-            <input name="Password" class="InputText" placeholder="Contraseña" type="text" value="<%= User.contrasena %>">
+            <div class="CenteredRow">
+                <input id="Passguord" name="Password" class="InputText" placeholder="Contraseña" type="password" value="<%= User.contrasena %>">
+                <button class="NoBtn" onclick="AlterVisiblePassword('Passguord')" type="button">
+                    <svg class="SuperSmallIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m3 5l16 16M11.148 9.123a3 3 0 0 1 3.722 3.752M8.41 6.878C12.674 4.762 17.267 6.47 21 12c-1.027 1.521-2.119 2.753-3.251 3.696m-2.509 1.59C11.076 19.142 6.631 17.38 3 12c1.01-1.496 2.083-2.713 3.196-3.65"/></svg>
+                </button>
+            </div>
+            <p class="Text">Repite la contraseña para poder actualizar</p>
+            <div class="CenteredRow">
+                <input id="VerifyPass" name="VerifyPass" class="InputText" placeholder="Verificar" type="password">
+                <button class="NoBtn" onclick="AlterVisiblePassword('VerifyPass')" type="button">
+                    <svg class="SuperSmallIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m3 5l16 16M11.148 9.123a3 3 0 0 1 3.722 3.752M8.41 6.878C12.674 4.762 17.267 6.47 21 12c-1.027 1.521-2.119 2.753-3.251 3.696m-2.509 1.59C11.076 19.142 6.631 17.38 3 12c1.01-1.496 2.083-2.713 3.196-3.65"/></svg>
+                </button>
+            </div>
             <div class="ButtonsSection">
                 <Button class="TopMenuBtn" type="submit">
                     <svg class="TopBtnIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7.558 3.75v1.27c0 1.094 0 1.641.208 2.061a2 2 0 0 0 .903.903c.42.208.967.208 2.062.208s1.642 0 2.062-.208a2 2 0 0 0 .902-.903c.209-.42.209-.967.209-2.062V3.75m-6.346 0h6.346m-6.346 0c-.751 0-1.126 0-1.438.067A3 3 0 0 0 3.817 6.12c-.067.312-.067.687-.067 1.438v9.519c0 .16 0 .241.003.309a3 3 0 0 0 2.861 2.86c.068.004.148.004.31.004m6.98-16.5h.052a3 3 0 0 1 2.078.86l.037.037l2.773 2.774c.519.519.778.778.964 1.081a3 3 0 0 1 .36.867c.028.12.047.242.059.381M6.923 20.25V16c0-1.4 0-2.1.273-2.635a2.5 2.5 0 0 1 1.092-1.092C8.823 12 9.523 12 10.923 12h2.154c1.168 0 1.849 0 2.353.158M6.923 20.25H9.75"/><path fill="currentColor" d="M21.796 12.204a2.4 2.4 0 0 0-1.546-.7a2.4 2.4 0 0 0-1.854.7l-1.47 1.47l-4.305 4.306a2.3 2.3 0 0 0-.635 1.172l-.21 1.098l-.261 1.371a.74.74 0 0 0 .195.67a.74.74 0 0 0 .669.194l2.469-.47a2.3 2.3 0 0 0 1.172-.636l5.776-5.776a2.404 2.404 0 0 0 0-3.399"/></g></svg>

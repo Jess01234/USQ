@@ -18,6 +18,9 @@ body {
     background-color: transparent;
     margin: none;
     cursor: pointer;
+    padding: 0px;
+    align-items: center;
+    justify-content: center;
 }
 
 .ProfileImgBG {
@@ -191,4 +194,29 @@ body {
 
 .TopMenuBtn:hover .TopMenuBtnText{
     width: 100px;
+}
+
+.CenteredRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.SuperSmallIcon {
+    color: var(--DarkBlue);
+    border-radius: var(--Border);
+    background-color: var(--Blue);
+    width: 25px;
+    height: 25px;
+    transition: 0.5s;
+}
+
+.NoBtn:hover .SuperSmallIcon{
+    width: 30px;
+    height: 30px;
+}
+
+.Text {
+    color: var(--Green);
 }

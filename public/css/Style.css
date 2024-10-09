@@ -231,6 +231,8 @@ body {
     margin: 0px;
     padding: 0px;
     transition: 0.5s;
+    align-items: center;
+    justify-content: center;
 }
 
 .InputText:focus {
@@ -638,6 +640,28 @@ tbody {
     width: 20px;
     transition: 0.5s;
     height: 20px;
+}
+
+.CenteredRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.SuperSmallIcon {
+    color: var(--DarkBlue);
+    border-radius: var(--Border);
+    background-color: var(--Blue);
+    width: 25px;
+    height: 25px;
+    transition: 0.5s;
+    margin-right: var(--smallmargin);
+}
+
+.NoBtn:hover .SuperSmallIcon{
+    width: 30px;
+    height: 30px;
 }
 
 @media (max-width: 800px) {

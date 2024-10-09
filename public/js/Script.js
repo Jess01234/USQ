@@ -20,3 +20,13 @@ function ChangeForm(ElementId, action) {
     Form.setAttribute('action', action);
     Form.submit();
 }
+
+function AlterVisiblePassword(ElementId) {
+    var PassInput = document.getElementById(ElementId);
+    
+    if (PassInput.type === 'password') {
+        PassInput.setAttribute('type', 'text');
+    } else {
+        PassInput.setAttribute('type', 'password');
+    }
+}

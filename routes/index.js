@@ -82,33 +82,105 @@ router.post('/UpdateProfile', async function (req, res, next) {
     var Phone = req.body.Phone;
     var Mail = req.body.Mail;
     var Password = req.body.Password;
+    var VerifyPass = req.body.VerifyPass;
 
+
+    // Verifica si se ha iniciado sesion
     if (!User || User.trim() === '') {
         res.redirect('/login');
     }
 
+    //Verifica si el usuario con el que se inicio sesion aun existe
     try {
         var result = await new sql.Request()
-            .input('Correo', User) // Consulta con parámetro para seguridad
+            .input('Correo', User)
             .query("SELECT * FROM Usuario WHERE Correo = @Correo");
-        
+            
+        var Res = result.recordset[0];
         const ID = result.recordset[0].IdUsuario;
 
-        await new sql.Request()
-        .input('Nombre', Name)
-        .input('ApellidoPaterno', LastName)
-        .input('ApellidoMaterno', LastName1)
-        .input('Telefono', Phone)
-        .input('Correo', Mail)
-        .input('Contrasena', Password)
-        .input('IdUsuario', ID)
-        .query(`UPDATE Usuario SET Nombre = @Nombre, ApellidoPaterno = @ApellidoPaterno, ApellidoMaterno = @ApellidoMaterno, Telefono = @Telefono, Correo = @Correo, contrasena = @Contrasena WHERE IdUsuario = @IdUsuario`);
+        var EmptyInputs;
 
-        console.log(String("-------Usuario actualizado---------"));
-        res.redirect('/login');
+        try{
+            // Verifica que los campos obligatorios no esten vacios
+            if (Name==''||LastName==''||LastName1==''||Mail==''||Password==''){
+
+                EmptyInputs = 'Los apartados ';
+    
+                if(Name == ''){
+                    EmptyInputs = EmptyInputs  + 'Nombre ';
+                }
+                if(LastName==''){
+                    EmptyInputs = EmptyInputs + 'Apellido paterno ';
+                }
+                if(LastName1==''){
+                    EmptyInputs = EmptyInputs + 'Apellido materno ';
+                }
+                if(Mail==''){
+                    EmptyInputs = EmptyInputs + 'Correo ';
+                }
+                if(Password==''){
+                    EmptyInputs = EmptyInputs + 'Contraseña ';
+                }
+    
+                EmptyInputs =EmptyInputs + 'no pueden quedar vacios';
+                res.render('Profile',
+                    {User: Res,
+                        Warning: EmptyInputs })
+            }
+            else if(Password !== VerifyPass){
+                res.render('Error', {
+                    Warning: 'Debes verificar tu contraseña para poder actualizar tu perfil'
+                })
+            }
+            else {
+                var Updated = 'Usuario actualizado correctamente en: ';
+
+                if(Name!==Res.Nombre){
+                    Updated = Updated + 'Nombre '
+                }
+                if(LastName!==Res.ApellidoPaterno){
+                    Updated = Updated + 'Apellido paterno '
+                }
+                if(LastName1!==Res.ApellidoMaterno){
+                    Updated = Updated + 'Apellido materno '
+                }
+                if(Phone!==Res.Telefono){
+                    Updated = Updated + 'Telefono '
+                }
+                if(Mail!==Res.Correo){
+                    Updated = Updated + 'Correo '
+                }
+                if(Password!==Res.contrasena){
+                    Updated = Updated + 'Contraseña '
+                }
+
+                await new sql.Request()
+                .input('Nombre', Name)
+                .input('ApellidoPaterno', LastName)
+                .input('ApellidoMaterno', LastName1)
+                .input('Telefono', Phone)
+                .input('Correo', Mail)
+                .input('Contrasena', Password)
+                .input('IdUsuario', ID)
+                .query(`UPDATE Usuario SET Nombre = @Nombre, ApellidoPaterno = @ApellidoPaterno, ApellidoMaterno = @ApellidoMaterno, Telefono = @Telefono, Correo = @Correo, contrasena = @Contrasena WHERE IdUsuario = @IdUsuario`);
+
+                var result = await new sql.Request()
+                    .input('Correo', User)
+                    .query("SELECT * FROM Usuario WHERE Correo = @Correo");
+            
+                var Res = result.recordset[0];
+
+                res.render('Profile',
+                    {User: Res,
+                        Warning: Updated});
+            }
+        }
+        catch{
+            console.log('catch ejecutado');
+        }
     }
     catch {
-        console.log(String("-------------Catch ejecutado------------------"));
         res.redirect('/login');
     }
 });

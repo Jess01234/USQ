@@ -656,7 +656,7 @@ tbody {
     width: 25px;
     height: 25px;
     transition: 0.5s;
-    margin-right: var(--smallmargin);
+    margin-right: var(--margin);
 }
 
 .NoBtn:hover .SuperSmallIcon{

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urban Solar</title>
+    <link rel="stylesheet" href="./css/Colors.css">
+    <link rel="stylesheet" href="./css/Style.css">
+    <script src="./js/Script.js"></script>
+    <link rel="shortcut icon" href="Icon.svg" type="image/x-icon">
+</head>
+<body>
+    <div class="Window">
+        <Button class="BtnAdd">
+            <svg class="BtnIcon AddIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M10.5 20a1.5 1.5 0 0 0 3 0v-6.5H20a1.5 1.5 0 0 0 0-3h-6.5V4a1.5 1.5 0 0 0-3 0v6.5H4a1.5 1.5 0 0 0 0 3h6.5z"/></g></svg>
+            <p class="MenuBtnText AddIcon">Agregar</p>
+        </Button>
+    </div>
+
+
+    <div class="ProfileImgBG">
+        <form style="transition: 0.5s;" action="Profile" method="post">
+            <button class="NoBtn" type="submit">
+                <p class="ProfileText">Perfil</p>
+            </button>
+        </form>
+        <img class="ProfileImg" src="./assets/Profile.png" alt="">
+    </div>
+    <div class="NavBar">
+        <img class="NavLogo" src="./assets/LogoBlanco.png" alt="">
+    </div>
+
+    <div class="Content">
+        <div class="TitleBG">
+            <p class="Title">Bienvenid@ <%= Name %></p>
+        </div>
+
+        <div class="Table">
+            <div class="TableTitleBG">
+                <p class="TableTitle">Productos</p>
+                <div class="TitleTableActions">
+                    <Button class="MenuBtnIconOnly Searcher">
+                        <svg class="TitleBtnIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M9 5a1 1 0 1 0 0 2a1 1 0 0 0 0-2M6.17 5a3.001 3.001 0 0 1 5.66 0H19a1 1 0 1 1 0 2h-7.17a3.001 3.001 0 0 1-5.66 0H5a1 1 0 0 1 0-2zM15 11a1 1 0 1 0 0 2a1 1 0 0 0 0-2m-2.83 0a3.001 3.001 0 0 1 5.66 0H19a1 1 0 1 1 0 2h-1.17a3.001 3.001 0 0 1-5.66 0H5a1 1 0 1 1 0-2zM9 17a1 1 0 1 0 0 2a1 1 0 0 0 0-2m-2.83 0a3.001 3.001 0 0 1 5.66 0H19a1 1 0 1 1 0 2h-7.17a3.001 3.001 0 0 1-5.66 0H5a1 1 0 1 1 0-2z"/></svg>
+                    </Button>
+                    <input class="InputText Searcher" placeholder="Buscar" type="text">
+                    <Button class="TitleBtn Searcher">
+                        <P class="TitleBtnText">Eliminar</P>
+                        <svg class="TitleBtnIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M20 5a1 1 0 1 1 0 2h-1l-.003.071l-.933 13.071A2 2 0 0 1 16.069 22H7.93a2 2 0 0 1-1.995-1.858l-.933-13.07L5 7H4a1 1 0 0 1 0-2zm-6-3a1 1 0 1 1 0 2h-4a1 1 0 0 1 0-2z"/></g></svg>
+                    </Button>
+                </div>
+            </div>
+            <table class="TableData">
+                <tr class="InfoTitleBG">
+                    <td class="InfoTitleText ActionList">
+                        <div class="RowButtons">
+                            <Button class="SmallMenuBtn">
+                                <svg class="SmallBtnIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 1024 1024"><path fill="currentColor" d="M77.248 415.04a64 64 0 0 1 90.496 0l226.304 226.304L846.528 188.8a64 64 0 1 1 90.56 90.496l-543.04 543.04l-316.8-316.8a64 64 0 0 1 0-90.496"/></svg>
+                                <p class="SmallMenuBtnText">Seleccionar</p>
+                            </Button>
+                        </div>
+                    </td>
+                    <td class="InfoTitleText">Nombre</td>
+                    <td class="InfoTitleText">Apellido</td>
+                    <td class="InfoTitleText">Telefono</td>
+                    <td class="InfoTitleText">Cotizado</td>
+                    <td class="InfoTitleText">Correo</td>
+                    <td class="InfoTitleText">Localidad</td>
+                    <td class="InfoTitleText">Municipio</td>
+                    <td class="InfoTitleText">Estado</td>
+                    <td class="InfoTitleText">Direccion</td>
+                </tr>
+                <tr>
+                    <td class="InfoText ActionList">
+                        <div class="RowButtons">
+                            <input class="CheckBox" type="checkbox">
+                            <Button class="SmallMenuBtn">
+                                <svg class="SmallBtnIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M7 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-1"/><path d="M20.385 6.585a2.1 2.1 0 0 0-2.97-2.97L9 12v3h3zM16 5l3 3"/></g></svg>
+                                <p class="SmallMenuBtnText">Editar</p>
+                            </Button>
+                        </div>
+                    </td>
+                    <td class="InfoText">Gillermo</td>
+                    <td class="InfoText">Del Toro</td>
+                    <td class="InfoText">9991739571</td>
+                    <td class="InfoText"></td>
+                    <td class="InfoText">9991739571</td>
+                    <td class="InfoText">Merida</td>
+                    <td class="InfoText">Guadalupana</td>
+                    <td class="InfoText">Yucatan</td>
+                    <td class="InfoText">Merida, Yucatan</td>
+                </tr>
+                <tr>
+                    <td class="InfoText ActionList">
+                        <div class="RowButtons">
+                            <input class="CheckBox" type="checkbox">
+                            <Button class="SmallMenuBtn">
+                                <svg class="SmallBtnIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M7 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-1"/><path d="M20.385 6.585a2.1 2.1 0 0 0-2.97-2.97L9 12v3h3zM16 5l3 3"/></g></svg>
+                                <p class="SmallMenuBtnText">Editar</p>
+                            </Button>
+                        </div>
+                    </td>
+                    <td class="InfoText">Alan</td>
+                    <td class="InfoText">Brado</td>
+                    <td class="InfoText">9991739571</td>
+                    <td class="InfoText">Kheeee?</td>
+                    <td class="InfoText">9991739571</td>
+                    <td class="InfoText">Merida</td>
+                    <td class="InfoText">Guadalupana</td>
+                    <td class="InfoText">Yucatan</td>
+                    <td class="InfoText">Merida, Yucatan</td>
+                </tr>
+                <tr>
+                    <td class="InfoText ActionList">
+                        <div class="RowButtons">
+                            <input class="CheckBox" type="checkbox">
+                            <Button class="SmallMenuBtn">
+                                <svg class="SmallBtnIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M7 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-1"/><path d="M20.385 6.585a2.1 2.1 0 0 0-2.97-2.97L9 12v3h3zM16 5l3 3"/></g></svg>
+                                <p class="SmallMenuBtnText">Editar</p>
+                            </Button>
+                        </div>
+                    </td>
+                    <td class="InfoText">Hugo Gillermo</td>
+                    <td class="InfoText">Campo Valladare</td>
+                    <td class="InfoText">9991739571</td>
+                    <td class="InfoText"></td>
+                    <td class="InfoText">9991739571</td>
+                    <td class="InfoText">Merida</td>
+                    <td class="InfoText">Guadalupana</td>
+                    <td class="InfoText">Yucatan</td>
+                    <td class="InfoText">Merida, Yucatan</td>
+                </tr>
+                <tr>
+                    <td class="InfoText ActionList">
+                        <div class="RowButtons">
+                            <input class="CheckBox" type="checkbox">
+                            <Button class="SmallMenuBtn">
+                                <svg class="SmallBtnIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M7 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-1"/><path d="M20.385 6.585a2.1 2.1 0 0 0-2.97-2.97L9 12v3h3zM16 5l3 3"/></g></svg>
+                                <p class="SmallMenuBtnText">Editar</p>
+                            </Button>
+                        </div>
+                    </td>
+                    <td class="InfoText">Hugo Gillermo</td>
+                    <td class="InfoText">Campo Valladare</td>
+                    <td class="InfoText">9991739571</td>
+                    <td class="InfoText"></td>
+                    <td class="InfoText">9991739571</td>
+                    <td class="InfoText">Merida</td>
+                    <td class="InfoText">Guadalupana</td>
+                    <td class="InfoText">Yucatan</td>
+                    <td class="InfoText">Merida, Yucatan</td>
+                </tr>
+                <tr>
+                    <td class="InfoText ActionList">
+                        <div class="RowButtons">
+                            <input class="CheckBox" type="checkbox">
+                            <Button class="SmallMenuBtn">
+                                <svg class="SmallBtnIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M7 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-1"/><path d="M20.385 6.585a2.1 2.1 0 0 0-2.97-2.97L9 12v3h3zM16 5l3 3"/></g></svg>
+                                <p class="SmallMenuBtnText">Editar</p>
+                            </Button>
+                        </div>
+                    </td>
+                    <td class="InfoText">Hugo Gillermo</td>
+                    <td class="InfoText">Campo Valladare</td>
+                    <td class="InfoText">9991739571</td>
+                    <td class="InfoText"></td>
+                    <td class="InfoText">9991739571</td>
+                    <td class="InfoText">Merida</td>
+                    <td class="InfoText">Guadalupana</td>
+                    <td class="InfoText">Yucatan</td>
+                    <td class="InfoText">Merida, Yucatan</td>
+                </tr>
+                <tr>
+                    <td class="InfoText ActionList">
+                        <div class="RowButtons">
+                            <input class="CheckBox" type="checkbox">
+                            <Button class="SmallMenuBtn">
+                                <svg class="SmallBtnIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M7 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-1"/><path d="M20.385 6.585a2.1 2.1 0 0 0-2.97-2.97L9 12v3h3zM16 5l3 3"/></g></svg>
+                                <p class="SmallMenuBtnText">Editar</p>
+                            </Button>
+                        </div>
+                    </td>
+                    <td class="InfoText">Hugo Gillermo</td>
+                    <td class="InfoText">Campo Valladare</td>
+                    <td class="InfoText">9991739571</td>
+                    <td class="InfoText"></td>
+                    <td class="InfoText">9991739571</td>
+                    <td class="InfoText">Merida</td>
+                    <td class="InfoText">Guadalupana</td>
+                    <td class="InfoText">Yucatan</td>
+                    <td class="InfoText">Merida, Yucatan</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

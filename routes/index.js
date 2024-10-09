@@ -22,6 +22,9 @@ router.get('/', async function (req, res, next) {
             if (Profile === "Admin") {
                 res.render('index', { Name: Res[0].Nombre });
             }
+            else if(Profile === "Proveedor") {
+                res.render('Supplier', { Name: Res[0].Nombre});
+            }
             else {
                 res.render('employee', { Name: Res[0].Nombre });
             }
@@ -34,41 +37,50 @@ router.get('/', async function (req, res, next) {
 
 router.post('/', async function (req, res, next) {
 
-    var Mail = req.body.Mail;
-    var Password = req.body.Password;
-    var Remind = req.body.RememberMe;
+    const User = req.cookies.User;
 
-    try {
-        var result = await new sql.Request().query("select * from Usuario where Correo = '" + Mail + "'");
-        var Res = result.recordset;
-        console.log(String(Res[0].contrasena));
-        if (Res.length > 0) {
-            if (Password == String(Res[0].contrasena)) {
-                if (Remind) {
-                    res.cookie('User', Mail)
+    if (!User || User.trim() === '') {
+        var Mail = req.body.Mail;
+        var Password = req.body.Password;
+        var Remind = req.body.RememberMe;
+    
+        try {
+            var result = await new sql.Request().query("select * from Usuario where Correo = '" + Mail + "'");
+            var Res = result.recordset;
+            console.log(String(Res[0].contrasena));
+            if (Res.length > 0) {
+                if (Password == String(Res[0].contrasena)) {
+                    if (Remind) {
+                        res.cookie('User', Mail)
+                    }
+                    else {
+                        res.cookie('User', Mail, { maxAge: 900000, httpOnly: true });
+                    }
+    
+                    var Profile = String(Res[0].Perfil)
+    
+                    if (Profile === "Admin") {
+                        res.render('index', { Name: Res[0].Nombre });
+                    }
+                    else if(Profile === "Proveedor") {
+                        res.render('Supplier', { Name: Res[0].Nombre});
+                    }
+                    else {
+                        res.render('Employee', { Name: Res[0].Nombre });
+                    }
                 }
                 else {
-                    res.cookie('User', Mail, { maxAge: 900000, httpOnly: true });
-                }
-
-                var Profile = String(Res[0].Perfil)
-
-                if (Profile === "Admin") {
-                    res.render('index', { Name: Res[0].Nombre });
-                }
-                else {
-                    res.render('employee', { Name: Res[0].Nombre });
+                    res.render('login', { Warning: "Contraseña incorrecta" });
                 }
             }
             else {
-                res.render('login', { Warning: "Contraseña incorrecta" });
+                res.render('login', { Warning: "El usuario no existe" });
             }
+        } catch (err) {
+            res.render('login', { Warning: "Usuario o contraseña incorrectos" });
         }
-        else {
-            res.render('login', { Warning: "El usuario no existe" });
-        }
-    } catch (err) {
-        res.render('login', { Warning: "Usuario o contraseña incorrectos" });
+    } else {
+        res.redirect('/login');
     }
 });
 
@@ -236,7 +248,14 @@ router.get('/login', function (req, res, next) {
 });
 
 router.post('/login', function (req, res, next) {
-    res.render('login', { Warning: "" });
+    
+    const User = req.cookies.User;
+
+    if (!User || User.trim() === '') {
+        res.render('login', { Warning: "" });
+    } else {
+        res.redirect('/');
+    }
 });
 
 router.get('/LogOut', function (req, res, next) {

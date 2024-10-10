@@ -117,12 +117,12 @@
             <table class="TableData">
                 <tr class="InfoTitleBG">
                     <td class="InfoTitleText ActionList">
-                        <div class="RowButtons">
+                        <!-- <div class="RowButtons">
                             <Button class="SmallMenuBtn">
                                 <svg class="SmallBtnIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 1024 1024"><path fill="currentColor" d="M77.248 415.04a64 64 0 0 1 90.496 0l226.304 226.304L846.528 188.8a64 64 0 1 1 90.56 90.496l-543.04 543.04l-316.8-316.8a64 64 0 0 1 0-90.496"/></svg>
                                 <p class="SmallMenuBtnText">Seleccionar</p>
                             </Button>
-                        </div>
+                        </div> -->
                     </td>
                     <td class="InfoTitleText">Nombre</td>
                     <td class="InfoTitleText">Apellido paterno</td>
@@ -133,10 +133,10 @@
                     <td class="InfoTitleText">Perfil</td>
                 </tr>
                 <% Employees.forEach(function(employee) { %>
-                    <tr>
+                    <tr class="ElementOfList">
                         <td class="InfoText ActionList">
                             <div class="RowButtons">
-                                <input class="CheckBox" type="checkbox">
+                                <!-- <input class="CheckBox" type="checkbox"> -->
                                 <form action="/employeedetails/<%= employee.IdUsuario %>" method="get">
                                     <Button class="SmallMenuBtn" type="submit">
                                         <svg class="SmallBtnIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M7 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-1"/><path d="M20.385 6.585a2.1 2.1 0 0 0-2.97-2.97L9 12v3h3zM16 5l3 3"/></g></svg>

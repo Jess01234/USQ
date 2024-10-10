@@ -7,6 +7,7 @@ const { connect, conectar, sql } = require('../models/db');
 conectar();
 
 async function VerifyLoggedUser(req, res){
+
     var User = req.cookies.User;
     
     if(!User || User.trim() === '') {
@@ -14,34 +15,56 @@ async function VerifyLoggedUser(req, res){
         return null;
     }
     else {
-        var result = await new sql.Request().query("select * from Usuario where Correo = '" + User + "'");
-        var Res = result.recordset;
-        var Profile = String(Res[0].Perfil)
+        try {
+            var result = await new sql.Request().query("select * from Usuario where Correo = '" + User + "'");
+            var Res = result.recordset;
+            if(Res) {
+                var Profile = String(Res[0].Perfil)
+                return Profile;
+            }
+            else{
+                res.clearCookie('User');
+                res.redirect('/login');
+                return null;
+            }
+        }
+        catch {
+            res.clearCookie('User');
+            res.redirect('/login');
+            return null;
+        }
     }
-    return Profile;
 }
 
 router.get('/', async function (req, res, next) {
 
     var Profile = await VerifyLoggedUser(req, res);
 
-    try {
-        
-        var result = await new sql.Request().query("select * from Usuario where Correo = '" + User + "'");
-        var Res = result.recordset;
-
-        if (Profile === "Admin") {
-            res.render('index', { Name: Res[0].Nombre });
-        }
-        else if(Profile === "Proveedor") {
-            res.render('Supplier', { Name: Res[0].Nombre});
-        }
-        else {
-            res.render('employee', { Name: Res[0].Nombre });
-        }
+    if(!Profile){
+        return;
     }
-    catch {
-        res.render('404', { Warning: 'El tipo de usuario no existe' });
+    else{
+
+        var User = req.cookies.User;
+    
+        try {
+            
+            var result = await new sql.Request().query("select * from Usuario where Correo = '" + User + "'");
+            var Res = result.recordset;
+    
+            if (Profile === "Admin") {
+                res.render('index', { Name: Res[0].Nombre });
+            }
+            else if(Profile === "Proveedor") {
+                res.render('Supplier', { Name: Res[0].Nombre});
+            }
+            else {
+                res.render('employee', { Name: Res[0].Nombre });
+            }
+        }
+        catch {
+            res.render('404', { Warning: 'El tipo de usuario no existe' });
+        }
     }
 });
 
@@ -97,6 +120,12 @@ router.post('/', async function (req, res, next) {
 router.get('/employees', async function (req, res, next) {
     
     var Profile = await VerifyLoggedUser(req, res);
+    
+    if(!Profile){
+        res.redirect("/login");
+    }
+
+    var User = req.cookies.User;
 
     try {
         var result = await new sql.Request()
@@ -133,6 +162,8 @@ router.get('/employees', async function (req, res, next) {
 router.get('/employeedetails/:IdUsuario', async function (req, res, next) {
 
     var Profile = await VerifyLoggedUser(req, res);
+    
+    const User = req.cookies.User;
 
     var employeeId = req.params.IdUsuario;
 

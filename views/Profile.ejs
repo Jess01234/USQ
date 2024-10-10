@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Urban Solar</title>
-    <link rel="stylesheet" href="./css/Colors.css">
-    <link rel="stylesheet" href="./css/Profile.css">
-    <script src="./js/Script.js"></script>
+    <link rel="stylesheet" href="/css/Colors.css">
+    <link rel="stylesheet" href="/css/Profile.css">
+    <script src="/js/Script.js"></script>
     <link rel="shortcut icon" href="Icon.svg" type="image/x-icon">
 </head>
 <body>
 
     <form id="UpdateProfile" action="UpdateProfile" method="post">
         <div class="ProfileImgBG">
-            <Button class="TopMenuBtn" onclick="ChangeForm('UpdateProfile', '/login')">
+            <Button class="TopMenuBtn" type="button" onclick="history.back()">
                 <svg class="TopBtnIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><circle cx="12" cy="12" r="0" fill="currentColor"><animate fill="freeze" attributeName="r" begin="0.8s" dur="0.2s" values="0;2"/></circle><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="48" stroke-dashoffset="48" d="M4.25 14c0.89 3.45 4.02 6 7.75 6c4.42 0 8 -3.58 8 -8c0 -4.42 -3.58 -8 -8 -8c-2.39 0 -4.53 1.05 -6 2.71l-2 2.29"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.6s" values="48;0"/></path><path fill="currentColor" stroke-width="1" d="M5.63 7.38l0 0l0 0l0 0z" opacity="0"><animate fill="freeze" attributeName="d" begin="0.6s" dur="0.2s" values="M5.63 7.38l0 0l0 0l0 0z;M5.63 7.38L3.5 5.25L3.5 9.5L7.75 9.5z"/><set fill="freeze" attributeName="opacity" begin="0.6s" to="1"/></path></g></svg>
                 <p class="TopMenuBtnText">Regresar</p>
             </Button>
@@ -22,7 +22,7 @@
         
         <div class="Content">
             <Button type="button" class="NoBtn">
-                <img class="ProfileImg" src="./assets/Profile.png" onclick="ChangeForm('UpdateProfile', '/')">
+                <img class="ProfileImg" src="/assets/Profile.png" onclick="ChangeForm('UpdateProfile', '/')">
             </Button>
             <p class="Text"><%= User.Nombre %></p>
             <% if(User.Perfil == "Proveedor" ) {%>
@@ -31,6 +31,7 @@
                     <p class="TopMenuBtnText">Cerrar sesion</p>
                 </Button>
             <%} else {%>
+                <input name="Name" class="InputText" placeholder="Nombre" type="text" value="<%= User.Nombre %>">
                 <input name="LastName" class="InputText" placeholder="Apellido paterno" type="text" value="<%= User.ApellidoPaterno %>">
                 <input name="LastName1" class="InputText" placeholder="Apellido materno" type="text" value="<%= User.ApellidoMaterno %>">
                 <input name="Phone" class="InputText" placeholder="Telefono" type="text" value="<%= User.Telefono %>">
@@ -40,15 +41,21 @@
                 <% if (User.Perfil == "Empleado" ) { %>
                     <input style="display: none;" name="Mail" class="InputText" placeholder="Correo" type="text" value="<%= User.Correo %>">
                 <% } %>
+                <input name="Profile" style="display: none;" class="InputText" placeholder="Perfil" list="ProfileOptions" value="<%= User.Perfil %>">
+                <datalist id="ProfileOptions">
+                    <option value="Empleado">
+                    <option value="Admin">
+                    <option value="Proveedor">
+                </datalist>
                 <div class="CenteredRow">
-                    <input id="Passguord" name="Password" class="InputText" placeholder="Contraseña" type="password" value="<%= User.contrasena %>">
+                    <input id="Passguord" name="Password" class="InputText Passguord" placeholder="Contraseña" type="password" value="<%= User.contrasena %>">
                     <button class="NoBtn" onclick="AlterVisiblePassword('Passguord')" type="button">
                         <svg class="SuperSmallIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m3 5l16 16M11.148 9.123a3 3 0 0 1 3.722 3.752M8.41 6.878C12.674 4.762 17.267 6.47 21 12c-1.027 1.521-2.119 2.753-3.251 3.696m-2.509 1.59C11.076 19.142 6.631 17.38 3 12c1.01-1.496 2.083-2.713 3.196-3.65"/></svg>
                     </button>
                 </div>
                 <p class="Text">Repite la contraseña para poder actualizar</p>
                 <div class="CenteredRow">
-                    <input id="VerifyPass" name="VerifyPass" class="InputText" placeholder="Verificar" type="password">
+                    <input id="VerifyPass" name="VerifyPass" class="InputText Passguord" placeholder="Verificar" type="password">
                     <button class="NoBtn" onclick="AlterVisiblePassword('VerifyPass')" type="button">
                         <svg class="SuperSmallIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m3 5l16 16M11.148 9.123a3 3 0 0 1 3.722 3.752M8.41 6.878C12.674 4.762 17.267 6.47 21 12c-1.027 1.521-2.119 2.753-3.251 3.696m-2.509 1.59C11.076 19.142 6.631 17.38 3 12c1.01-1.496 2.083-2.713 3.196-3.65"/></svg>
                     </button>

@@ -84,6 +84,92 @@ router.post('/', async function (req, res, next) {
     }
 });
 
+router.get('/employees', async function (req, res, next) {
+    const User = req.cookies.User;
+
+    if (!User || User.trim() === '') {
+        res.redirect('/login');
+        return;
+    }
+
+    try {
+        var result = await new sql.Request()
+            .input('Correo', sql.VarChar, User)
+            .query("SELECT * FROM Usuario WHERE Correo = @Correo");
+
+        var Res = result.recordset[0];
+
+        if (Res) {
+            var Profile = Res.Perfil;
+
+            if (Profile === "Admin") {
+
+                result = await new sql.Request().query("SELECT * FROM Usuario");
+                var Users = result.recordset;
+
+                res.render('Table',
+                    { 
+                        Name: Res.Nombre,
+                        TableName: 'Empleados y usuarios',
+                        Employees: Users
+                    });
+            } else {
+                res.render('Error', { Warning: 'No tienes acceso a esta sección' });
+            }
+        } else {
+            res.redirect('/login');
+        }
+    } catch (err) {
+        console.error('Error al procesar la solicitud:', err);
+        res.redirect('/login');
+    }
+});
+
+router.get('/employeedetails/:IdUsuario', async function (req, res, next) {
+
+    const User = req.cookies.User;
+    var employeeId = req.params.IdUsuario;
+
+    if (!User || User.trim() === '') {
+        res.redirect('/login');
+        return;
+    }
+
+    try {
+        var result = await new sql.Request()
+            .input('Correo', sql.VarChar, User)
+            .query("SELECT * FROM Usuario WHERE Correo = @Correo");
+
+        var Res = result.recordset[0];
+
+        if (Res) {
+            var Profile = Res.Perfil;
+
+            if (Profile === "Admin") {
+
+                result = await new sql.Request()
+                .input('IdUsuario', employeeId)
+                .query("SELECT * FROM Usuario WHERE IdUsuario = @IdUsuario");
+
+                var Users = result.recordset[0];
+
+                res.render('EmployeeDetails',
+                    { 
+                        User: Users,
+                        Warning: ''
+                    });
+            } else {
+                res.render('Error', { Warning: 'No tienes acceso a esta sección' });
+            }
+        } else {
+            res.redirect('/login');
+        }
+    } catch (err) {
+        console.error('Error al procesar la solicitud:', err);
+        res.redirect('/login');
+    }
+});
+
 router.post('/UpdateProfile', async function (req, res, next) {
 
     const User = req.cookies.User;
@@ -92,6 +178,7 @@ router.post('/UpdateProfile', async function (req, res, next) {
     var LastName = req.body.LastName;
     var LastName1 = req.body.LastName1;
     var Phone = req.body.Phone;
+    var Profile = req.body.Profile;
     var Mail = req.body.Mail;
     var Password = req.body.Password;
     var VerifyPass = req.body.VerifyPass;
@@ -172,10 +259,11 @@ router.post('/UpdateProfile', async function (req, res, next) {
                 .input('ApellidoPaterno', LastName)
                 .input('ApellidoMaterno', LastName1)
                 .input('Telefono', Phone)
+                .input('Perfil', Profile)
                 .input('Correo', Mail)
                 .input('Contrasena', Password)
                 .input('IdUsuario', ID)
-                .query(`UPDATE Usuario SET Nombre = @Nombre, ApellidoPaterno = @ApellidoPaterno, ApellidoMaterno = @ApellidoMaterno, Telefono = @Telefono, Correo = @Correo, contrasena = @Contrasena WHERE IdUsuario = @IdUsuario`);
+                .query(`UPDATE Usuario SET Nombre = @Nombre, ApellidoPaterno = @ApellidoPaterno, ApellidoMaterno = @ApellidoMaterno, Telefono = @Telefono, Perfil =  @Perfil, Correo = @Correo, contrasena = @Contrasena WHERE IdUsuario = @IdUsuario`);
 
                 var result = await new sql.Request()
                     .input('Correo', User)
@@ -189,10 +277,148 @@ router.post('/UpdateProfile', async function (req, res, next) {
             }
         }
         catch{
-            console.log('catch ejecutado');
+            res.redirect('/login');
         }
     }
     catch {
+        res.redirect('/login');
+    }
+});
+
+router.post('/Deleteuser/:IdUsuario', async function (req, res, next) {
+
+    var employeeId = req.params.IdUsuario
+
+    var Password = req.body.Password;
+    var VerifyPass = req.body.VerifyPass;
+
+    if(Password !== VerifyPass){
+        res.render('Error', {
+            Warning: 'Debes verificar la contraseña del perfil para poder eliminar'
+        })
+    }
+    else{
+        await new sql.Request()
+        .input('IdUsuario', employeeId)
+        .query("DELETE FROM Usuario WHERE IdUsuario = @IdUsuario");
+        res.render('404', { Warning: 'Usuario eliminado correctamente' });
+    }
+})
+
+router.post('/Updateuser/:IdUsuario', async function (req, res, next) {
+
+    var employeeId = req.params.IdUsuario;
+
+    var Name = req.body.Name;
+    var LastName = req.body.LastName;
+    var LastName1 = req.body.LastName1;
+    var Phone = req.body.Phone;
+    var Profile = req.body.Profile;
+    var Mail = req.body.Mail;
+    var Password = req.body.Password;
+    var VerifyPass = req.body.VerifyPass;
+
+    var result = await new sql.Request()
+    .input('IdUsuario', employeeId)
+    .query("SELECT * FROM Usuario WHERE IdUsuario = @IdUsuario");
+    
+    var Res = result.recordset[0];
+
+    var EmptyInputs;
+
+    try{
+        // Verifica que los campos obligatorios no esten vacios
+        if (Name==''||LastName==''||LastName1==''||Profile==''||Mail==''||Password==''){
+
+            EmptyInputs = 'Los apartados ';
+
+            if(Name == ''){
+                EmptyInputs = EmptyInputs  + 'Nombre ';
+            }
+            if(LastName==''){
+                EmptyInputs = EmptyInputs + 'Apellido paterno ';
+            }
+            if(LastName1==''){
+                EmptyInputs = EmptyInputs + 'Apellido materno ';
+            }
+            if(LastName1==''){
+                EmptyInputs = EmptyInputs + 'Perfil ';
+            }
+            if(Mail==''){
+                EmptyInputs = EmptyInputs + 'Correo ';
+            }
+            if(Password==''){
+                EmptyInputs = EmptyInputs + 'Contraseña ';
+            }
+
+            EmptyInputs =EmptyInputs + 'no pueden quedar vacios';
+            res.render('Profile',
+                {User: Res,
+                    Warning: EmptyInputs })
+        }
+        else if(Password !== VerifyPass){
+            res.render('Error', {
+                Warning: 'Debes verificar la contraseña del perfil para poder actualizar'
+            })
+        }
+        else {
+
+            var Updated = 'Usuario actualizado correctamente en: ';
+            
+            if(Name!==Res.Nombre){
+                Updated = Updated + 'Nombre '
+            }
+            if(LastName!==Res.ApellidoPaterno){
+                Updated = Updated + 'Apellido paterno '
+            }
+            if(LastName1!==Res.ApellidoMaterno){
+                Updated = Updated + 'Apellido materno '
+            }
+            if(Phone!==Res.Telefono){
+                Updated = Updated + 'Telefono '
+            }
+            if(Mail!==Res.Correo){
+                result = await new sql.Request()
+                .input('IdUsuario', employeeId)
+                .input('Correo', Mail)
+                .query("SELECT * FROM Usuario WHERE Correo = @Correo AND IdUsuario != @IdUsuario");
+                
+                if( result.recordset.length > 0){
+                    res.render('Error', { Warning: 'Este correo ya pertenece a otro usuario o perfil' });
+                }
+                else{
+                    Updated = Updated + 'Correo '
+                }
+            }
+            if(Password!==Res.contrasena){
+                Updated = Updated + 'Contraseña '
+            }
+
+            await new sql.Request()
+            .input('IdUsuario', employeeId)
+            .input('Nombre', Name)
+            .input('ApellidoPaterno', LastName)
+            .input('ApellidoMaterno', LastName1)
+            .input('Telefono', Phone)
+            .input('Perfil', Profile)
+            .input('Correo', Mail)
+            .input('Contrasena', Password)
+            .query(`UPDATE Usuario SET Nombre = @Nombre, ApellidoPaterno = @ApellidoPaterno, ApellidoMaterno = @ApellidoMaterno, Telefono = @Telefono, Perfil =  @Perfil, Correo = @Correo, contrasena = @Contrasena WHERE IdUsuario = @IdUsuario`);
+
+            var result = await new sql.Request()
+            .input('IdUsuario', employeeId)
+            .query("SELECT * FROM Usuario WHERE IdUsuario = @IdUsuario");
+        
+            var Res = result.recordset[0];
+
+            res.render('EmployeeDetails',
+                { 
+                    User: Res,
+                    Warning: Updated
+                });
+        }
+    }
+    catch{
         res.redirect('/login');
     }
 });

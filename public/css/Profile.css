@@ -56,6 +56,11 @@ body {
     border-radius: var(--Border);
     font-size: var(--fonts);
     text-align: center;
+    width: 230px;
+}
+
+.Passguord {
+    width: 190px;
 }
 
 .InputText:focus {
@@ -91,9 +96,12 @@ body {
     display: flex;
     width: 100%;
     flex-direction: column;
+    margin-top: 100px;
     align-items: center;
-    justify-content: center;
     height: 100%;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 .Logo {
@@ -221,3 +229,4 @@ body {
 .Text {
     color: var(--Green);
 }
+

@@ -24,7 +24,7 @@ app.use('/', indexRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   // next(createError(404));
-  res.status(404).render('404');
+  res.status(404).render('404', { Warning: 'Esta pagina no existe' });
 });
 
 
@@ -36,7 +36,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.render('404', {Warning: err});
 });
 
 module.exports = app;

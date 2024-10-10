@@ -217,11 +217,16 @@ body {
     margin-top: var(--smallmargin);
     margin-bottom: var(--smallmargin);
     color: var(--DarkBlue);
-    background-color: var(--White);
+    background-color: var(--White); 
     border: none;
     border-radius: var(--Border);
     font-size: var(--fonts);
     text-align: center;
+    width: 230px;
+}
+
+.Passguord {
+    width: 190px;
 }
 
 .NoBtn {

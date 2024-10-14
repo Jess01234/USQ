@@ -433,6 +433,13 @@ body {
     margin-right: var(--smallmargin);
 }
 
+.TitleTableActions div{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
 .TableData{
     display: flex;
     width: 100%;
@@ -459,12 +466,12 @@ div::-webkit-scrollbar {
 
 .TableTitle {
     font-family: 'NexaBold', sans-serif;
-    font-size: var(--fonts);
+    font-size: var(--fontt);
     width: 100%;
     text-align: center;
     color: var(--Black);
-    margin-left: var(--margin);
-    margin-right: var(--margin);
+    margin-left: var(--smallmargin);
+    margin-right: var(--smallmargin);
 }
 
 .InfoTitleBG {
@@ -678,14 +685,53 @@ tbody {
     margin-right: var(--margin);
 }
 
+.SearcherIcon {
+    color: var(--Green);
+    border-radius: var(--Border);
+    background-color: var(--Black);
+    width: 25px;
+    height: 25px;
+    transition: 0.5s;
+}
+
+.NoBtn:hover .SearcherIcon{
+    background-color: var(--DarkBlue);
+}
+
 .NoBtn:hover .SuperSmallIcon{
     width: 30px;
     height: 30px;
+}
+
+#Filter {
+    background-color: var(--Black);
+    color: var(--Green);
+    font-size: var(--fonts);
+    border-radius: var(--Border);
+    border: none;
+    font-family: 'NexaBold', sans-serif;
+    margin-right: var(--smallmargin);
+    margin-left: var(--smallmargin);
+}
+
+
+.Filter {
+    border-radius: var(--Border);
+    border: none;
 }
 
 @media (max-width: 800px) {
     .TableTitleBG {
         flex-direction: column;
     }
+    .TitleTableActions {
+        display: flex;
+        flex-direction: column;
+    }
     
+    .TitleTableActions div{
+        display: flex;
+        flex-direction: row;
+    }
 }
+

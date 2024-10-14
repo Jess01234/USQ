@@ -30,3 +30,10 @@ function AlterVisiblePassword(ElementId) {
         PassInput.setAttribute('type', 'password');
     }
 }
+
+function RedirectForm(ElementId, action, method){
+    var Form = document.getElementById(ElementId);
+    Form.setAttribute('action', action);
+    Form.setAttribute('method', method)
+    Form.submit();
+}

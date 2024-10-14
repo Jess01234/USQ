@@ -113,6 +113,8 @@ body {
     height: 100%;
     overflow: scroll;
     scrollbar-width: none;
+    margin-bottom: var(--margin);
+    padding-bottom: 100px;
 }
 
 .Logo {

@@ -86,6 +86,12 @@ body {
     text-align: center;
 }
 
+.Text{
+    color: var(--Green);
+    font-size: var(--fonts);
+    margin: var(--smallmargin);
+}
+
 .BlackBG {
     position: fixed;
     background-color: var(--TranslucentBlack);

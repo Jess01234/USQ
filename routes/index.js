@@ -3,6 +3,7 @@ const { Console } = require('console');
 var express = require('express');
 var router = express.Router();
 const { connect, conectar, sql } = require('../models/db');
+const sendMail = require('../Mail');
 
 conectar();
 
@@ -86,7 +87,7 @@ router.post('/', async function (req, res, next) {
             var Res = result.recordset;
 
             if (Res.length > 0) {
-                if (Password == String(Res[0].contrasena)) {
+                if (Password == String(Res[0].Contrasena)) {
                     if (Remind) {
                         res.cookie('User', Mail)
                     }
@@ -196,7 +197,8 @@ router.get('/employees', async function (req, res, next) {
                     TableName: 'Empleados y usuarios',
                     Employees: Users,
                     Filter: Filter,
-                    Order: Order
+                    Order: Order, 
+                    Searcher: Searcher
                 });
                  
                 return;
@@ -317,9 +319,25 @@ router.post("/Adduser", async function (req, res, next) {
             EmptyInputs = EmptyInputs + 'Perfil ';
         }
         EmptyInputs = EmptyInputs + "no deben quedar vacios"
-        res.render('EmployeeAdd', {
+        res.render('Error', {
             Warning: EmptyInputs
         });
+        return;
+    }
+    if (Name.length > 30 || LastName.length > 20 || LastName1.length > 20) {
+        res.render('Error', { Warning: 'Los nombres y apellidos no pueden exceder 15 caracteres.' });
+        return;
+    }
+    if (Phone && Phone.length > 12) {
+        res.render('Error', { Warning: 'El teléfono no puede exceder 10 caracteres.' });
+        return;
+    }
+    if (Mail.length > 30) {
+        res.render('Error', { Warning: 'El correo no puede exceder 30 caracteres.' });
+        return;
+    }
+    if (Password.length < 6 || Password.length > 20) {
+        res.render('Error', { Warning: 'La contraseña debe tener al menos 6 caracteres y menos de 20' });
         return;
     }
     else if( result.recordset.length > 0){
@@ -347,9 +365,9 @@ router.post("/Adduser", async function (req, res, next) {
         .input('ApellidoMaterno', LastName1)
         .input('Telefono', Phone)
         .input('Correo', Mail)
-        .input('contrasena', Password)
+        .input('Contrasena', Password)
         .input('Perfil', Profile)
-        .query("insert into Usuario(Nombre, ApellidoPaterno, ApellidoMaterno, Telefono, Correo, contrasena, Perfil) values (@Nombre, @ApellidoPaterno, @ApellidoMaterno, @Telefono, @Correo, @contrasena, @Perfil)");
+        .query("insert into Usuario(Nombre, ApellidoPaterno, ApellidoMaterno, Telefono, Correo, Contrasena, Perfil) values (@Nombre, @ApellidoPaterno, @ApellidoMaterno, @Telefono, @Correo, @Contrasena, @Perfil)");
 
         res.render('404', {
             Warning: 'Usuario agregado correctamente'
@@ -402,11 +420,11 @@ router.post('/UpdateProfile', async function (req, res, next) {
                 res.render('Profile', { User: Res, Warning: EmptyInputs });
                 return;
             }
-            if (Name.length > 15 || LastName.length > 15 || LastName1.length > 15) {
+            if (Name.length > 30 || LastName.length > 20 || LastName1.length > 20) {
                 res.render('Error', { Warning: 'Los nombres y apellidos no pueden exceder 15 caracteres.' });
                 return;
             }
-            if (Phone && Phone.length > 10) {
+            if (Phone && Phone.length > 12) {
                 res.render('Error', { Warning: 'El teléfono no puede exceder 10 caracteres.' });
                 return;
             }
@@ -414,9 +432,23 @@ router.post('/UpdateProfile', async function (req, res, next) {
                 res.render('Error', { Warning: 'El correo no puede exceder 30 caracteres.' });
                 return;
             }
-            if (Password.length < 6 && Password.length > 20) {
+            if (Password.length < 6 || Password.length > 20) {
                 res.render('Error', { Warning: 'La contraseña debe tener al menos 6 caracteres y menos de 20' });
                 return;
+            }
+            if(Mail!==Res.Correo){
+                result = await new sql.Request()
+                .input('IdUsuario', ID)
+                .input('Correo', Mail)
+                .query("SELECT * FROM Usuario WHERE Correo = @Correo AND IdUsuario != @IdUsuario");
+                
+                if( result.recordset.length > 0){
+                    res.render('Error', { Warning: 'Este correo ya pertenece a otro usuario o perfil' });
+                    return;
+                }
+                else{
+                    Updated = Updated + 'Correo '
+                }
             }
             else if (Profile!=='Admin'&&Profile!=='Empleado'&&Profile!=='Proveedor'){
                 res.render('Error',
@@ -426,9 +458,9 @@ router.post('/UpdateProfile', async function (req, res, next) {
                 )
                 return;
             }
-            else if(Password !== VerifyPass){
+            else if(VerifyPass!==Res.Contrasena){
                 res.render('Error', {
-                    Warning: 'Debes verificar tu contraseña para poder actualizar tu perfil'
+                    Warning: 'La contraseña no coincide o esta vacia'
                 })
                 return;
             }
@@ -450,7 +482,7 @@ router.post('/UpdateProfile', async function (req, res, next) {
                 if(Mail!==Res.Correo){
                     Updated = Updated + 'Correo '
                 }
-                if(Password!==Res.contrasena){
+                if(Password!==Res.Contrasena){
                     Updated = Updated + 'Contraseña '
                 }
 
@@ -463,7 +495,7 @@ router.post('/UpdateProfile', async function (req, res, next) {
                 .input('Correo', Mail)
                 .input('Contrasena', Password)
                 .input('IdUsuario', ID)
-                .query(`UPDATE Usuario SET Nombre = @Nombre, ApellidoPaterno = @ApellidoPaterno, ApellidoMaterno = @ApellidoMaterno, Telefono = @Telefono, Perfil =  @Perfil, Correo = @Correo, contrasena = @Contrasena WHERE IdUsuario = @IdUsuario`);
+                .query(`UPDATE Usuario SET Nombre = @Nombre, ApellidoPaterno = @ApellidoPaterno, ApellidoMaterno = @ApellidoMaterno, Telefono = @Telefono, Perfil =  @Perfil, Correo = @Correo, Contrasena = @Contrasena WHERE IdUsuario = @IdUsuario`);
 
                 var result = await new sql.Request()
                     .input('Correo', User)
@@ -545,11 +577,11 @@ router.post('/Updateuser/:IdUsuario', async function (req, res, next) {
             res.render('Profile', { User: Res, Warning: EmptyInputs });
             return;
         }
-        if (Name.length > 15 || LastName.length > 15 || LastName1.length > 15) {
+        if (Name.length > 30 || LastName.length > 20 || LastName1.length > 20) {
             res.render('Error', { Warning: 'Los nombres y apellidos no pueden exceder 15 caracteres.' });
             return;
         }
-        if (Phone && Phone.length > 10) {
+        if (Phone && Phone.length > 12) {
             res.render('Error', { Warning: 'El teléfono no puede exceder 10 caracteres.' });
             return;
         }
@@ -557,7 +589,7 @@ router.post('/Updateuser/:IdUsuario', async function (req, res, next) {
             res.render('Error', { Warning: 'El correo no puede exceder 30 caracteres.' });
             return;
         }
-        if (Password.length < 6 && Password.length > 20) {
+        if (Password.length < 6 || Password.length > 20) {
             res.render('Error', { Warning: 'La contraseña debe tener al menos 6 caracteres y menos de 20' });
             return;
         }
@@ -605,7 +637,7 @@ router.post('/Updateuser/:IdUsuario', async function (req, res, next) {
                     Updated = Updated + 'Correo '
                 }
             }
-            if(Password!==Res.contrasena){
+            if(Password!==Res.Contrasena){
                 Updated = Updated + 'Contraseña '
             }
 
@@ -618,7 +650,7 @@ router.post('/Updateuser/:IdUsuario', async function (req, res, next) {
             .input('Perfil', Profile)
             .input('Correo', Mail)
             .input('Contrasena', Password)
-            .query(`UPDATE Usuario SET Nombre = @Nombre, ApellidoPaterno = @ApellidoPaterno, ApellidoMaterno = @ApellidoMaterno, Telefono = @Telefono, Perfil =  @Perfil, Correo = @Correo, contrasena = @Contrasena WHERE IdUsuario = @IdUsuario`);
+            .query(`UPDATE Usuario SET Nombre = @Nombre, ApellidoPaterno = @ApellidoPaterno, ApellidoMaterno = @ApellidoMaterno, Telefono = @Telefono, Perfil =  @Perfil, Correo = @Correo, Contrasena = @Contrasena WHERE IdUsuario = @IdUsuario`);
 
             var result = await new sql.Request()
             .input('IdUsuario', employeeId)
@@ -707,6 +739,47 @@ router.post('/login', function (req, res, next) {
         res.redirect('/');
     }
     return;
+});
+
+router.get('/RecoverPassword', function(req, res, next){
+    res.render('RecoverPassword',
+        {
+            Warning: ""
+        }
+    );
+});
+
+router.post('/SendPassword', async function(req, res, next){
+
+    var Mail = req.body.Mail;
+
+    try{
+        var result = await new sql.Request()
+        .input('Correo', Mail)
+        .query("SELECT * FROM Usuario WHERE Correo = @Correo")
+
+        if(result.recordset.length > 0) {
+
+            var Pass = result.recordset[0].Contrasena
+    
+            sendMail(Mail, 'Recuperacion de contraseña', `Tu contraseña actual es: ${Pass}`, res);
+            return;
+        }
+        else {
+            res.render('Error', {
+                Warning: 'No existe ninguna cuenta con este correo'
+            });
+            return;
+        }
+
+    }
+    catch{
+        res.render('Error', {
+            Warning: 'Error al enviar el correo, intentalo de nuevo mas tarde'
+        });
+        return;
+    }
+
 });
 
 router.get('/LogOut', function (req, res, next) {

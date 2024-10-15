@@ -11,7 +11,7 @@
 </head>
 <body>
     <div class="IMGBG">
-        <form action="/" method="post">
+        <form id="Login" action="/" method="post">
             <div class="CenteredPopup">
                 <Div class="TitlePopUp">Inicio de sesión</Div>
                 <div class="DataCentered">
@@ -26,8 +26,8 @@
                         <input name="RememberMe" class="CheckBox" type="checkbox">
                         <p class="CheckBoxText">Recuerdame</p>
                     </div>
-                    <Button type="button" class="TextButton">Olvide mi Contraseña</Button>
-                    <Button type="submit" class="Btn">Iniciar sesión</Button>
+                    <Button type="button" class="TextButton" onclick="RedirectForm('Login', '/RecoverPassword', 'get')">Olvide mi Contraseña</Button>
+                    <Button type="submit" class="Btn" onclick="RedirectForm('Login', '/', 'post')">Iniciar sesión</Button>
                     <p class="WarningText"><%= Warning %></p>
                     <img class="LoginLogo" src="./assets/LogoBlanco.png" alt="">
                 </div>

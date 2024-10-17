@@ -449,7 +449,7 @@ body {
 .TableData{
     display: flex;
     width: 100%;
-    height: 392px;
+    height: 800px;
     overflow: scroll;
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -537,6 +537,7 @@ tbody {
     width: 100%;
     min-width: var(--MinTableElement);
     scrollbar-width: none;
+    word-wrap: break-word;
     -ms-overflow-style: none;
 }
 
@@ -589,11 +590,6 @@ tbody {
 
 .SmallMenuBtn:hover {
     width: 160px;
-}
-
-.ActionList {
-    min-width: 200px;
-    width: 200px;
 }
 
 .SmallBtnIcon {
@@ -719,7 +715,6 @@ tbody {
     margin-right: var(--smallmargin);
     margin-left: var(--smallmargin);
 }
-
 
 .Filter {
     border-radius: var(--Border);

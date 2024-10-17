@@ -1,4 +1,3 @@
-const { format } = require("path");
 
 
 function HideWindow(){
@@ -14,6 +13,20 @@ function ShowWindow(){
 
     PopUp.style.display = 'flex';
 };
+
+function SetVisible(SetVisible, SetInvisible){
+    var Visible = document.getElementById(SetVisible);
+    var Invisible = document.getElementById(SetInvisible);
+
+    Visible.style.display = 'flex';
+    Invisible.style.display = 'none';
+}
+
+function ChangeValue(ElementId, Value){
+    var Element = document.getElementById(ElementId);
+
+    Element.setAttribute('value', Value)
+}
 
 function ChangeForm(ElementId, action) {
     var Form = document.getElementById(ElementId);

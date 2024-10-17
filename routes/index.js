@@ -129,10 +129,201 @@ router.post('/', async function (req, res, next) {
     }
 });
 
+router.get('/clients', async function (req, res, next) {
+    
+    var Profile = await VerifyLoggedUser(req, res);
+    
+    if(!Profile){
+        return;
+    }
+
+    var ClientTypeFilter = req.cookies.ClientTypeF || 'All';
+    var ClientsFilter = req.cookies.ClientsF || 'IdCliente';
+    var ClientsOrder = req.cookies.ClientsO || 'ASC';
+    
+    var ClientType = req.query.ClientTypeF || ClientTypeFilter;
+    var Filter = req.query.Filter || ClientsFilter;
+    if((ClientType=='Panel'&&Filter=='ReferenciaP')||(ClientType=='Panel'&&Filter=='Fecha'||(ClientType=='Irrigation'&&Filter=='Correo')||(ClientType=='Irrigation'&&Filter=='NoServicioCFE'))){
+        Filter='IdCliente';
+    }
+    var Order = req.query.Order || ClientsOrder;
+    var Searcher = req.query.Searcher || '';
+
+    res.cookie('ClientTypeF', ClientType, { maxAge: 900000, httpOnly: true });
+    res.cookie('ClientsF', Filter, { maxAge: 900000, httpOnly: true });
+    res.cookie('ClientsO', Order, { maxAge: 900000, httpOnly: true });
+
+    var User = req.cookies.User;
+
+    try {
+        var result = await new sql.Request()
+            .input('Correo', sql.VarChar, User)
+            .query("SELECT * FROM Usuario WHERE Correo = @Correo");
+
+        var Res = result.recordset[0];
+
+        if (Profile === "Admin") {
+
+            if(ClientType=='All'){
+
+                var Query = `SELECT 
+                            C.IdCliente, C.Nombre, C.Estado, C.Municipio, C.Localidad, C.Calle, C.Telefono,
+                            CP.IdClienteP, CP.Correo, CP.NoServicioCFE,
+                            CR.IdClienteR, CR.ReferenciaP, CR.Fecha
+                        FROM 
+                            Cliente C
+                        LEFT JOIN 
+                            ClientePanel CP ON C.IdCliente = CP.IdCliente
+                        LEFT JOIN 
+                            ClienteRiego CR ON C.IdCliente = CR.IdCliente `;
+                var Params = [];
+
+                // Verificar si hay algún término de búsqueda
+                if (Searcher) {
+                    // Dividir los términos por espacio
+                    var searchTerms = Searcher.split(' ');
+
+                    // Construir la consulta dinámica
+                    var whereClauses = [];
+                    searchTerms.forEach((term, index) => {
+                        var paramName = `Searcher${index}`;
+                        whereClauses.push(`(C.Nombre LIKE @${paramName}
+                            OR C.Estado LIKE @${paramName}
+                            OR C.Municipio LIKE @${paramName}
+                            OR C.Localidad LIKE @${paramName}
+                            OR C.Calle LIKE @${paramName}
+                            OR C.Telefono LIKE @${paramName}
+                            OR CP.Correo LIKE @${paramName}
+                            OR CP.NOServicioCFE LIKE @${paramName}
+                            OR CR.ReferenciaP LIKE @${paramName} 
+                            OR CR.Fecha LIKE @${paramName})`);
+                        Params.push({ name: paramName, value: `%${term}%` });
+                    });
+
+                    // Unir las cláusulas WHERE con AND para que se busquen todos los términos
+                    Query += ' WHERE ' + whereClauses.join(' AND ');
+                }
+            }
+            else if(ClientType=='Panel'){
+
+                var Query = `SELECT 
+                            C.IdCliente, C.Nombre, C.Estado, C.Municipio, C.Localidad, C.Calle, C.Telefono,
+                            CP.IdClienteP, CP.Correo, CP.NoServicioCFE
+                        FROM 
+                            Cliente C
+                        LEFT JOIN 
+                            ClientePanel CP ON C.IdCliente = CP.IdCliente `;
+                var Params = [];
+
+                // Verificar si hay algún término de búsqueda
+                if (Searcher) {
+                    // Dividir los términos por espacio
+                    var searchTerms = Searcher.split(' ');
+
+                    // Construir la consulta dinámica
+                    var whereClauses = [];
+                    searchTerms.forEach((term, index) => {
+                        var paramName = `Searcher${index}`;
+                        whereClauses.push(`(C.Nombre LIKE @${paramName}
+                            OR C.Estado LIKE @${paramName}
+                            OR C.Municipio LIKE @${paramName}
+                            OR C.Localidad LIKE @${paramName}
+                            OR C.Calle LIKE @${paramName}
+                            OR C.Telefono LIKE @${paramName}
+                            OR CP.Correo LIKE @${paramName}
+                            OR CP.NOServicioCFE LIKE @${paramName})`);
+                        Params.push({ name: paramName, value: `%${term}%` });
+                    });
+
+                    // Unir las cláusulas WHERE con AND para que se busquen todos los términos
+                    Query += ' WHERE ' + whereClauses.join(' AND ');
+                    Query += ' AND C.IdCliente = CP.IdCliente';
+                }
+                else{
+                    Query += ' WHERE C.IdCliente = CP.IdCliente';
+                }
+            }
+            else if(ClientType=='Irrigation'){
+
+                var Query = `SELECT 
+                            C.IdCliente, C.Nombre, C.Estado, C.Municipio, C.Localidad, C.Calle, C.Telefono,
+                            CR.IdClienteR, CR.ReferenciaP, CR.Fecha
+                        FROM 
+                            Cliente C
+                        LEFT JOIN 
+                            ClienteRiego CR ON C.IdCliente = CR.IdCliente `;
+                var Params = [];
+
+                // Verificar si hay algún término de búsqueda
+                if (Searcher) {
+                    // Dividir los términos por espacio
+                    var searchTerms = Searcher.split(' ');
+
+                    // Construir la consulta dinámica
+                    var whereClauses = [];
+                    searchTerms.forEach((term, index) => {
+                        var paramName = `Searcher${index}`;
+                        whereClauses.push(`(C.Nombre LIKE @${paramName}
+                            OR C.Estado LIKE @${paramName}
+                            OR C.Municipio LIKE @${paramName}
+                            OR C.Localidad LIKE @${paramName}
+                            OR C.Calle LIKE @${paramName}
+                            OR C.Telefono LIKE @${paramName}
+                            OR CR.Fecha LIKE @${paramName})`);
+                        Params.push({ name: paramName, value: `%${term}%` });
+                    });
+
+                    // Unir las cláusulas WHERE con AND para que se busquen todos los términos
+                    Query += ' WHERE ' + whereClauses.join(' AND ');
+                    Query += ' AND C.IdCliente = CR.IdCliente';
+                }
+                else{
+                    Query += ' WHERE C.IdCliente = CR.IdCliente'
+                }
+            }
+            
+            // Ordenar los resultados
+            Query += ` ORDER BY ${Filter} ${Order}`;
+
+            // Preparar la consulta con parámetros
+            var request = new sql.Request();
+            Params.forEach(param => {
+                request.input(param.name, param.value);
+            });
+
+            result = await request.query(Query);
+            var Clients = result.recordset;
+
+            res.render('Clients', {
+                Name: Res.Nombre,
+                TableName: 'Clientes',
+                Clients: Clients,
+                Filter: Filter,
+                Order: Order, 
+                Searcher: Searcher,
+                ClientType : ClientType
+            });
+             
+            return;
+        } else {
+            res.render('Error', { Warning: 'No tienes acceso a esta sección' });
+            return;
+        }
+        return;
+    } catch (err) {
+        res.redirect('/login');
+        return;
+    }
+});
+
 router.get('/employees', async function (req, res, next) {
     
     var Profile = await VerifyLoggedUser(req, res);
     
+    if(!Profile){
+        return;
+    }
+
     var EmployeesFilter = req.cookies.EmployeesF || 'IdUsuario';
     var EmployeesOrder = req.cookies.EmployeesO || 'ASC';
     
@@ -142,11 +333,6 @@ router.get('/employees', async function (req, res, next) {
 
     res.cookie('EmployeesF', Filter, { maxAge: 900000, httpOnly: true });
     res.cookie('EmployeesO', Order, { maxAge: 900000, httpOnly: true });
-
-    if (!Profile) {
-        res.redirect("/login");
-        return;
-    }
 
     var User = req.cookies.User;
 
@@ -221,39 +407,36 @@ router.get('/employeedetails/:IdUsuario', async function (req, res, next) {
 
     var Profile = await VerifyLoggedUser(req, res);
     
-    const User = req.cookies.User;
-
+    if(!Profile){
+        return;
+    }
+    
     var employeeId = req.params.IdUsuario;
 
     try {
-        var result = await new sql.Request()
-            .input('Correo', User)
-            .query("SELECT * FROM Usuario WHERE Correo = @Correo");
+        if (Profile === "Admin") {
 
-        var Res = result.recordset[0];
+            var result = await new sql.Request()
+            .input('IdUsuario', employeeId)
+            .query("SELECT * FROM Usuario WHERE IdUsuario = @IdUsuario");
 
-        if (Res) {
+            var Users = result.recordset[0];
 
-            if (Profile === "Admin") {
-
-                result = await new sql.Request()
-                .input('IdUsuario', employeeId)
-                .query("SELECT * FROM Usuario WHERE IdUsuario = @IdUsuario");
-
-                var Users = result.recordset[0];
-
+            if(Users){
                 res.render('EmployeeDetails',
                     { 
                         User: Users,
                         Warning: ''
                     });
                     return;
-            } else {
-                res.render('Error', { Warning: 'No tienes acceso a esta sección' });
+            }
+            else{
+                res.render('404', {Warning: 'Este usuario no existe o fue eliminado'});
                 return;
             }
+
         } else {
-            res.redirect('/login');
+            res.render('Error', { Warning: 'No tienes acceso a esta sección' });
             return;
         }
     } catch (err) {
@@ -262,11 +445,61 @@ router.get('/employeedetails/:IdUsuario', async function (req, res, next) {
     }
 });
 
+router.get('/ClientDetails/:IdCliente', async function (req, res, next) {
+
+    var Profile = await VerifyLoggedUser(req, res);
+
+    if(!Profile){
+        return;
+    }
+
+    var ClientID = req.params.IdCliente;
+
+    try{
+        if(Profile=='Admin'){
+            var result = await new sql.Request()
+            .input('IdCliente', ClientID)
+            .query(`SELECT 
+                    C.IdCliente, C.Nombre, C.Estado, C.Municipio, C.Localidad, C.Calle, C.Telefono,
+                    CP.IdClienteP, CP.Correo, CP.NoServicioCFE,
+                    CR.IdClienteR, CR.ReferenciaP, CR.Fecha
+                    FROM 
+                    Cliente C
+                    LEFT JOIN 
+                    ClientePanel CP ON C.IdCliente = CP.IdCliente
+                    LEFT JOIN 
+                    ClienteRiego CR ON C.IdCliente = CR.IdCliente
+                    WHERE C.IdCliente = @IdCliente`);
+                    
+            var Client = result.recordset[0]
+
+            if(Client){
+                res.render('ClientDetails', {
+                    Client: Client,
+                    Warning: ''
+                });
+                    return;
+            }
+            else{
+                res.render('404', {Warning: 'Este usuario no existe o fue eliminado'});
+                return;
+            }
+        }
+    }
+    catch{
+        res.redirect('/login');
+        return;
+    }
+})
+
 router.get('/Addemployee', async function (req, res, next) {
 
     var Profile = await VerifyLoggedUser(req, res);
     
-    if(Profile!=='Admin'){
+    if(!Profile){
+        return;
+    }
+    else if(Profile!=='Admin'){
         res.render('error',
             {
                 Warning: 'No tienes acceso a esta seccion'
@@ -282,7 +515,328 @@ router.get('/Addemployee', async function (req, res, next) {
     }
 });
 
+router.get('/Addclient', async function (req, res, next) {
+    
+    var Profile = await VerifyLoggedUser(req, res);
+    
+    if(!Profile){
+        return;
+    }
+    else if(Profile!=='Admin'){
+        res.render('error', {
+            Warning: 'No tienes acceso a esta seccion'
+        });
+        return;
+    }
+    else{
+        res.render('ClientAdd', {
+            Warning: ''
+        });
+        return;
+    }
+})
+
+router.post('/NewClient', async function (req, res, next) {
+
+    var Profile = await VerifyLoggedUser(req, res);
+    
+    if(!Profile){
+        return;
+    }
+
+    const User = req.cookies.User;
+
+    var Name = req.body.Name;
+    var State = req.body.State;
+    var Municipality = req.body.Municipality;
+    var Locality = req.body.Locality;
+    var Street = req.body.Street;
+    var Phone = req.body.Phone;
+    
+    var Mail = req.body.Mail;
+    var CFEService = req.body.CFEService;
+
+    var Reference = req.body.Reference;
+
+    var ClientType = req.body.ClientType;
+    var VerifyPass = req.body.VerifyPass;
+
+    var result = await new sql.Request()
+            .input('Correo', User)
+            .query("SELECT * FROM Usuario WHERE Correo = @Correo");
+
+    var Pass = result.recordset[0].Contrasena;
+
+
+    if(Name==''||State==''||Municipality==''||Locality==''||Street==''||Phone==''){
+        var EmptyInputs = "Los apartados "
+
+        if(Name==''){
+            EmptyInputs = EmptyInputs + 'Nombre ';
+        }
+        if(State==''){
+            EmptyInputs = EmptyInputs + 'Estado  ';
+        }
+        if(Municipality==''){
+            EmptyInputs = EmptyInputs + 'Muninipio '
+        }
+        if(Locality==''){
+            EmptyInputs = EmptyInputs + 'Localidad ';
+        }
+        if(Street==''){
+            EmptyInputs = EmptyInputs + 'Calle ';
+        }
+        if(Phone==''){
+            EmptyInputs = EmptyInputs + 'Telefono ';
+        }
+        EmptyInputs = EmptyInputs + "no deben quedar vacios"
+        res.render('Error', {
+            Warning: EmptyInputs
+        });
+        return;
+    }
+    else if(Name.length > 150){
+        res.render('error', {Warning: 'El nombre no debe ser mayor a 150 caracteres'});
+        return;
+    }
+    else if(State.length>50||Municipality.length>50||Locality.length>50||Street.length>50){
+        res.render('error', {Warning: 'Los apartados de estado, municipio, localidad y calle no deben sobrepasar 50 caracteres'});
+        return
+    }
+    else if(Phone.length>12){
+        res.render('error', {Warning: 'El telefono no debe pasar de 12 caracteres'});
+        return;
+    }
+    else if(Pass!=VerifyPass){
+        res.render('error', 'Debes verificar tu contraseña para poder agregar')
+        return;
+    }
+    try{
+        var NewClient = await new sql.Request()
+        .input('Nombre', Name)
+        .input('Estado', State)
+        .input('Municipio', Municipality)
+        .input('Localidad', Locality)
+        .input('Calle', Street)
+        .input('Telefono', Phone)
+        .query(`INSERT INTO Cliente (Nombre, Estado, Municipio, Localidad, Calle, Telefono)
+            OUTPUT INSERTED.IdCliente
+            VALUES (@Nombre, @Estado, @Municipio, @Localidad, @Calle, @Telefono)`)
+        
+        var AddedClient = NewClient.recordset[0].IdCliente;
+        
+        if(ClientType == 'Panel'){
+            if(Mail>30){
+                res.render('error',{Warning:'El correo no debe sobrepasar 30 caracteres'})
+                return;
+            }
+            else if(CFEService.length>20){
+                res.render('error',{Warning:'El No. de servicio CFE no debe sobrepasar 20 caracteres'})
+                return;
+            }
+            await new sql.Request()
+            .input('Correo', Mail)
+            .input('NoServicioCFE', CFEService)
+            .input('IdCliente', AddedClient)
+            .query(`INSERT INTO ClientePanel (Correo, NoServicioCFE, IdCliente) 
+                    VALUES (@Correo, @NoServicioCFE, @IdCliente)`);
+            res.render('404', {
+                Warning: 'Cliente de panel agregado correctamente'
+            });
+            return;
+        }
+        else if(ClientType=='Irrigation'){
+            if(Reference>200){
+                res.render('error',{Warning:'La referencia no debe sobrepasar 200 caracteres'})
+                return;
+            }
+            await new sql.Request()
+            .input('ReferenciaP', Reference)
+            .input('IdCliente', AddedClient)
+            .query(`INSERT INTO ClienteRiego (ReferenciaP, IdCliente) VALUES (@ReferenciaP, @IdCliente)`);
+
+            
+            res.render('404', {
+                Warning: 'Cliente de riego agregado correctamente'
+            });
+            return;
+        }
+    }
+    catch{
+        res.render('error', {
+            Warning: 'Error en el servidor, intenta de nuevo mas tarde'
+        });
+        return;
+    }
+
+})
+
+router.post('/UpdateClient/:IdCliente', async function (req, res, next) {
+
+    var Profile = await VerifyLoggedUser(req, res);
+    
+    if(!Profile){
+        return;
+    }
+
+    var ClientID = req.params.IdCliente;
+    const User = req.cookies.User;
+
+    var Name = req.body.Name;
+    var State = req.body.State;
+    var Municipality = req.body.Municipality;
+    var Locality = req.body.Locality;
+    var Street = req.body.Street;
+    var Phone = req.body.Phone;
+    
+    var Mail = req.body.Mail;
+    var CFEService = req.body.CFEService;
+
+    var Reference = req.body.Reference;
+
+    var results = await new sql.Request()
+    .input('IdCliente', ClientID)
+    .query(`SELECT 
+            C.IdCliente, C.Nombre, C.Estado, C.Municipio, C.Localidad, C.Calle, C.Telefono,
+            CP.IdClienteP, CP.Correo, CP.NoServicioCFE,
+            CR.IdClienteR, CR.ReferenciaP, CR.Fecha
+            FROM 
+            Cliente C
+            LEFT JOIN 
+            ClientePanel CP ON C.IdCliente = CP.IdCliente
+            LEFT JOIN 
+            ClienteRiego CR ON C.IdCliente = CR.IdCliente
+            WHERE C.IdCliente = @IdCliente`);
+    
+    var Client = results.recordset[0];
+
+    if(Client.IdClienteP){
+        var ClientType = 'Panel';
+    }
+    else if(Client.IdClienteR){
+        var ClientType = 'Irrigation';
+    }
+    else{
+        var ClientType = 'Panel';
+    }
+
+    var VerifyPass = req.body.VerifyPass;
+
+    var result = await new sql.Request()
+            .input('Correo', User)
+            .query("SELECT * FROM Usuario WHERE Correo = @Correo");
+
+    var Pass = result.recordset[0].Contrasena;
+
+    if(Name==''||State==''||Municipality==''||Locality==''||Street==''||Phone==''){
+        var EmptyInputs = "Los apartados "
+
+        if(Name==''){
+            EmptyInputs = EmptyInputs + 'Nombre ';
+        }
+        if(State==''){
+            EmptyInputs = EmptyInputs + 'Estado  ';
+        }
+        if(Municipality==''){
+            EmptyInputs = EmptyInputs + 'Muninipio '
+        }
+        if(Locality==''){
+            EmptyInputs = EmptyInputs + 'Localidad ';
+        }
+        if(Street==''){
+            EmptyInputs = EmptyInputs + 'Calle ';
+        }
+        if(Phone==''){
+            EmptyInputs = EmptyInputs + 'Telefono ';
+        }
+        EmptyInputs = EmptyInputs + "no deben quedar vacios"
+        res.render('Error', {
+            Warning: EmptyInputs
+        });
+        return;
+    }
+    else if(Name.length > 150){
+        res.render('error', {Warning: 'El nombre no debe ser mayor a 150 caracteres'});
+        return;
+    }
+    else if(State.length>50||Municipality.length>50||Locality.length>50||Street.length>50){
+        res.render('error', {Warning: 'Los apartados de estado, municipio, localidad y calle no deben sobrepasar 50 caracteres'});
+        return
+    }
+    else if(Phone.length>12){
+        res.render('error', {Warning: 'El telefono no debe pasar de 12 caracteres'});
+        return;
+    }
+    else if(Pass!=VerifyPass){
+        res.render('error', {Warning: 'Debes verificar tu contraseña para poder actualizar'});
+        return;
+    }
+    try{
+        var UpdateClient = await new sql.Request()
+        .input('Nombre', Name)
+        .input('Estado', State)
+        .input('Municipio', Municipality)
+        .input('Localidad', Locality)
+        .input('Calle', Street)
+        .input('Telefono', Phone)
+        .input('IdCliente', ClientID)
+        .query(`UPDATE Cliente
+            SET Nombre = @Nombre, Estado = @Estado, Municipio = @Municipio, Localidad = @Localidad, Calle = @Calle, Telefono = @Telefono
+            WHERE IdCliente = @IdCliente`)
+        
+        if(ClientType == 'Panel'){
+            if(Mail>30){
+                res.render('error',{Warning:'El correo no debe sobrepasar 30 caracteres'})
+                return;
+            }
+            else if(CFEService.length>20){
+                res.render('error',{Warning:'El No. de servicio CFE no debe sobrepasar 20 caracteres'})
+                return;
+            }
+            await new sql.Request()
+            .input('Correo', Mail)
+            .input('NoServicioCFE', CFEService)
+            .input('IdCliente', ClientID)
+            .query(`UPDATE ClientePanel SET Correo = @Correo, NoServicioCFE = @NoServicioCFE 
+                    WHERE IdCliente = @IdCliente`);
+            res.render('404', {
+                Warning: 'Cliente de panel actualizado correctamente'
+            });
+            return;
+        }
+        else if(ClientType=='Irrigation'){
+            if(Reference>200){
+                res.render('error',{Warning:'La referencia no debe sobrepasar 200 caracteres'})
+                return;
+            }
+            await new sql.Request()
+            .input('ReferenciaP', Reference)
+            .input('IdCliente', ClientID)
+            .query(`UPDATE ClienteRiego SET ReferenciaP = @ReferenciaP
+                WHERE IdCliente = @IdCliente`);
+
+            res.render('404', {
+                Warning: 'Cliente de riego actualizado correctamente'
+            });
+            return;
+        }
+    }
+    catch{
+        res.render('error', {
+            Warning: 'Error en el servidor, intenta de nuevo mas tarde'
+        });
+        return;
+    }
+
+})
+
 router.post("/Adduser", async function (req, res, next) {
+
+    var Profile = await VerifyLoggedUser(req, res);
+    
+    if(!Profile){
+        return;
+    }
 
     var Name = req.body.Name;
     var LastName = req.body.LastName;
@@ -380,6 +934,12 @@ router.post("/Adduser", async function (req, res, next) {
 
 router.post('/UpdateProfile', async function (req, res, next) {
 
+    var Profile = await VerifyLoggedUser(req, res);
+    
+    if(!Profile){
+        return;
+    }
+
     const User = req.cookies.User;
 
     var Name = req.body.Name;
@@ -421,7 +981,7 @@ router.post('/UpdateProfile', async function (req, res, next) {
                 return;
             }
             if (Name.length > 30 || LastName.length > 20 || LastName1.length > 20) {
-                res.render('Error', { Warning: 'Los nombres y apellidos no pueden exceder 15 caracteres.' });
+                res.render('Error', { Warning: 'El nombre no puede exceder 30 caracteres y apellidos no pueden exceder 20 caracteres.' });
                 return;
             }
             if (Phone && Phone.length > 12) {
@@ -458,7 +1018,7 @@ router.post('/UpdateProfile', async function (req, res, next) {
                 )
                 return;
             }
-            else if(VerifyPass!==Res.Contrasena){
+            else if(VerifyPass!==Password){
                 res.render('Error', {
                     Warning: 'La contraseña no coincide o esta vacia'
                 })
@@ -521,9 +1081,48 @@ router.post('/UpdateProfile', async function (req, res, next) {
     }
 });
 
+router.post('/DeleteClient/:IdClient', async function (req, res, next) {
+
+    var ClientId = req.params.IdClient;
+
+    var Profile = await VerifyLoggedUser(req, res);
+    if(!Profile){
+        return;
+    }
+
+    const User = req.cookies.User;
+    
+    var result = await new sql.Request()
+            .input('Correo', User)
+            .query("SELECT * FROM Usuario WHERE Correo = @Correo");
+
+    var Pass = result.recordset[0].Contrasena;
+    var VerifyPass = req.body.VerifyPass;
+
+    if(Pass !== VerifyPass){
+        res.render('Error', {
+            Warning: 'Debes verificar la contraseña del perfil para poder eliminar'
+        });
+        return;
+    }
+    else{
+        await new sql.Request()
+        .input('IdUsuario', ClientId)
+        .query("DELETE FROM Cliente WHERE IdCliente = @IdUsuario");
+        res.render('404', { Warning: 'Usuario eliminado correctamente' });
+        return;
+    }
+});
+
 router.post('/Deleteuser/:IdUsuario', async function (req, res, next) {
 
-    var employeeId = req.params.IdUsuario
+    var Profile = await VerifyLoggedUser(req, res);
+    
+    if(!Profile){
+        return;
+    }
+
+    var employeeId = req.params.IdUsuario;
 
     var Password = req.body.Password;
     var VerifyPass = req.body.VerifyPass;
@@ -544,6 +1143,12 @@ router.post('/Deleteuser/:IdUsuario', async function (req, res, next) {
 });
 
 router.post('/Updateuser/:IdUsuario', async function (req, res, next) {
+
+    var Profile = await VerifyLoggedUser(req, res);
+    
+    if(!Profile){
+        return;
+    }
 
     var employeeId = req.params.IdUsuario;
 
@@ -578,7 +1183,7 @@ router.post('/Updateuser/:IdUsuario', async function (req, res, next) {
             return;
         }
         if (Name.length > 30 || LastName.length > 20 || LastName1.length > 20) {
-            res.render('Error', { Warning: 'Los nombres y apellidos no pueden exceder 15 caracteres.' });
+            res.render('Error', { Warning: 'El nombre no puede esceder 30 y apellidos no pueden exceder 15 caracteres.' });
             return;
         }
         if (Phone && Phone.length > 12) {
@@ -674,6 +1279,12 @@ router.post('/Updateuser/:IdUsuario', async function (req, res, next) {
 
 router.get('/Profile', async function (req, res, next) {
 
+    var Profile = await VerifyLoggedUser(req, res);
+    
+    if(!Profile){
+        return;
+    }
+
     const User = req.cookies.User;
 
     if (!User || User.trim() === '') {
@@ -696,6 +1307,13 @@ router.get('/Profile', async function (req, res, next) {
 });
 
 router.post('/Profile', async function (req, res, next) {
+
+    var Profile = await VerifyLoggedUser(req, res);
+    
+    if(!Profile){
+        return;
+    }
+
     const User = req.cookies.User;
 
     if (!User || User.trim() === '') {
@@ -782,13 +1400,24 @@ router.post('/SendPassword', async function(req, res, next){
 
 });
 
-router.get('/LogOut', function (req, res, next) {
+router.get('/LogOut', async function (req, res, next) {
+    var Profile = await VerifyLoggedUser(req, res);
+    
+    if(!Profile){
+        return;
+    }
     res.clearCookie('User');
     res.redirect("/login");
     return;
 });
 
-router.post('/LogOut', function (req, res, next) {
+router.post('/LogOut', async function (req, res, next) {
+    var Profile = await VerifyLoggedUser(req, res);
+    
+    if(!Profile){
+        return;
+    }
+
     res.clearCookie('User');
     res.redirect("/login");
     return;

@@ -66,6 +66,7 @@ body {
     font-size: var(--fonts);
     text-align: center;
     width: 230px;
+    scrollbar-width: none;
 }
 
 .Passguord {
@@ -243,3 +244,7 @@ body {
     color: var(--Green);
 }
 
+.ClientType{
+    align-items: center;
+    flex-direction: column;
+}

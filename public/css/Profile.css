@@ -95,7 +95,15 @@ body {
     transition: 0.5s;
 }
 
-.NoBtn:hover .ProfileImg {
+.BigIcon {
+    height: 100px;
+    width: 100px;
+    margin: var(--margin);
+    transition: 0.5s;
+    color: var(--Green);
+}
+
+.NoBtn:hover .ProfileImg, .NoBtn:hover .BigIcon {
     height: 120px;
     width: 120px;
 }
@@ -170,12 +178,6 @@ body {
     justify-content: center;
 }
 
-@media (max-width: 800px) {
-    .Logo {
-        width: 70%;
-    }
-}
-
 
 .TopMenuBtn {
     width: 60px;
@@ -247,4 +249,213 @@ body {
 .ClientType{
     align-items: center;
     flex-direction: column;
+}
+
+.Table {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--ClearBlue);
+    margin: var(--margin);
+    max-width: 100%;
+    border-radius: var(--Border);
+    overflow: hidden;
+}
+
+.TitleTableActions {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+    margin-left: var(--smallmargin);
+    margin-right: var(--smallmargin);
+}
+
+.TableData{
+    display: flex;
+    width: 100%;
+    height: 800px;
+    overflow: scroll;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+
+div::-webkit-scrollbar { 
+    display: none;
+}
+
+.TableTitleBG {
+    background-color: var(--Blue);
+    border-radius: var(--Border);
+    justify-content: center;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.TableTitle {
+    font-family: 'NexaBold', sans-serif;
+    font-size: var(--fontt);
+    width: 100%;
+    text-align: center;
+    color: var(--Black);
+    margin-left: var(--smallmargin);
+    margin-right: var(--smallmargin);
+}
+
+.InfoTitleBG {
+    background-color: var(--Blue);
+    border-radius: var(--Border);
+}
+
+.InfoTitleText {
+    color: var(--DarkBlue);
+    padding: var(--smallmargin);
+    max-width: var(--MaxTableElement);
+    width: 100%;
+    min-width: var(--MinTableElement);
+    line-clamp: 1;
+    overflow-x: scroll;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+th, td {
+    border-left: none;
+    border-right: none;
+    border-top: 5px solid var(--ClearBlue);
+    border-bottom: 5px solid var(--ClearBlue);
+}
+
+tbody {
+    width: 100%;
+}
+
+.InfoText {
+    transition: 0.5s;
+    color: var(--DarkBlue);
+    padding: var(--smallmargin);
+    background-color: var(--White);
+    line-clamp: 1;
+    overflow-x: scroll;
+    scrollbar-width: 0;
+    max-width: var(--MaxTableElement);
+    width: 100%;
+    min-width: var(--MinTableElement);
+    scrollbar-width: none;
+    word-wrap: break-word;
+    -ms-overflow-style: none;
+}
+
+.ElementOfList:hover .InfoText{
+    background-color: var(--Green);
+} 
+
+.TitleTableActions div{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.SmallMenuBtn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--Blue);
+    border: none;
+    margin-left: var(--smallmargin);
+    border-radius: var(--Border);
+    transition: 0.5s;
+}
+
+.SmallMenuBtn:hover {
+    width: 160px;
+}
+
+.SmallBtnIcon {
+    color: var(--DarkBlue);
+    width: 30px;
+    height: 30px;
+    margin: 0x;
+    transition: 0.5s;
+}
+
+.SmallMenuBtnText {
+    font-family: 'NexaBold', sans-serif;
+    color: var(--DarkBlue);
+    font-size: var(--fonts);
+    width: 0px;
+    transition: 0.5s;
+    overflow: hidden;
+    text-align: center;
+    transition: 0.5s;
+}
+
+.SmallMenuBtn:hover .SmallMenuBtnText{
+    width: 100px;
+}
+
+.SelectSupplier{
+    background-color: var(--TranslucentBlack);
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    overflow: scroll;
+    scrollbar-width: none;
+    box-sizing: border-box;
+    transition: 0.5s;
+}
+
+.SearcherIcon {
+    color: var(--Green);
+    border-radius: var(--Border);
+    background-color: var(--Black);
+    width: 25px;
+    height: 25px;
+    transition: 0.5s;
+}
+
+#Filter {
+    background-color: var(--Black);
+    color: var(--Green);
+    font-size: var(--fonts);
+    border-radius: var(--Border);
+    border: none;
+    font-family: 'NexaBold', sans-serif;
+    margin-right: var(--smallmargin);
+    margin-left: var(--smallmargin);
+}
+
+.Filter {
+    border-radius: var(--Border);
+    border: none;
+}
+
+
+@media (max-width: 800px) {
+    .Logo {
+        width: 70%;
+    }
+    .TableTitleBG {
+        flex-direction: column;
+    }
+    .TitleTableActions {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .TitleTableActions div{
+        display: flex;
+        flex-direction: row;
+    }
 }

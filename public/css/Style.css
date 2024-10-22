@@ -521,10 +521,6 @@ tbody {
     color: var(--Warning);
 }
 
-.ElementOfList:hover .InfoText{
-    background-color: var(--Green);
-} 
-
 .InfoText {
     transition: 0.5s;
     color: var(--DarkBlue);
@@ -540,6 +536,10 @@ tbody {
     word-wrap: break-word;
     -ms-overflow-style: none;
 }
+
+.ElementOfList:hover .InfoText{
+    background-color: var(--Green);
+} 
 
 .RowButtons {
     display: flex;

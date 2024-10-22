@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urban Solar</title>
+    <link rel="stylesheet" href="/css/Colors.css">
+    <link rel="stylesheet" href="/css/Profile.css">
+    <script src="/js/Script.js"></script>
+    <link rel="shortcut icon" href="Icon.svg" type="image/x-icon">
+</head>
+<body>
+
+    <form id="UpdateProfile" action="/NewProduct" method="post">
+        <div class="ProfileImgBG">
+            <Button class="TopMenuBtn" type="button" onclick="RedirectForm('UpdateProfile', '/Inventory', 'get')">
+                <svg class="TopBtnIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><circle cx="12" cy="12" r="0" fill="currentColor"><animate fill="freeze" attributeName="r" begin="0.8s" dur="0.2s" values="0;2"/></circle><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="48" stroke-dashoffset="48" d="M4.25 14c0.89 3.45 4.02 6 7.75 6c4.42 0 8 -3.58 8 -8c0 -4.42 -3.58 -8 -8 -8c-2.39 0 -4.53 1.05 -6 2.71l-2 2.29"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.6s" values="48;0"/></path><path fill="currentColor" stroke-width="1" d="M5.63 7.38l0 0l0 0l0 0z" opacity="0"><animate fill="freeze" attributeName="d" begin="0.6s" dur="0.2s" values="M5.63 7.38l0 0l0 0l0 0z;M5.63 7.38L3.5 5.25L3.5 9.5L7.75 9.5z"/><set fill="freeze" attributeName="opacity" begin="0.6s" to="1"/></path></g></svg>
+                <p class="TopMenuBtnText">Regresar</p>
+            </Button>
+            <p class="Title">Agregar producto</p>
+        </div>
+        
+        <div class="Content">
+            <Button type="button" class="NoBtn">
+                <!-- <img class="ProfileImg" src="/assets/Profile.png" onclick="RedirectForm('UpdateProfile', '/', 'post')"> -->
+                <svg class="BigIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="4"><path d="M44 14L24 4L4 14v20l20 10l20-10z"/><path stroke-linecap="round" d="m4 14l20 10m0 20V24m20-10L24 24M34 9L14 19"/></g></svg>
+            </Button>
+            <p class="Text">Nuevo producto</p>
+            <input name="Code" class="InputText" placeholder="Codigo" type="text" value="<%= Data.Code %>">
+            <input name="Concept" class="InputText" placeholder="Concepto" type="text" value="<%= Data.Concept %>">
+            <input name="Unity" class="InputText" placeholder="Unidad" type="text" value="<%= Data.Unity %>">
+            <input name="PUC" class="InputText" placeholder="Costo del precio unitario" type="text" value="<%= Data.PUC %>">
+            <input name="Supplier" class="InputText" placeholder="Proveedor" type="text" value="<%= Data.Supplier %>">
+
+            <div class="CenteredRow">
+                <input style="display: none;" id="SelectSupplierId" name="SupplierUserId" class="InputText Passguord" type="text" value="<%= Data.SupplierUserId %>">
+                <input id="SelectSupplierBtn" name="SupplierUserMail" class="InputText Passguord" type="text" value="<%= Data.SupplierUserMail %>" readonly>
+                <button class="NoBtn" type="button" onclick="document.getElementById('SelectSupplier').style.display='flex'">
+                    <svg class="SuperSmallIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569z"/></svg>
+                </button>
+            </div>
+            <!-- <input id="SelectSupplierBtn" name="SupplierUserMail" class="InputText" type="button" onclick="document.getElementById('SelectSupplier').style.display='flex'"  value="<%= Data.SupplierUserMail %>"> -->
+
+
+            
+            <input id="ProductAddType" style="display: none;" name="ProductType" class="InputText" placeholder="Telefono" type="text" value="<%= Data.ProductType %>">
+            
+            <div class="ButtonsSection">
+                <Button class="TopMenuBtn" type="button" onclick="ChangeValue('ProductAddType', 'Panel'); SelectValue('Searching', 'False'); RedirectForm('UpdateProfile', '/AddProduct', 'get')">
+                    <svg class="TopBtnIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 256 256"><path fill="currentColor" d="M32 100a12 12 0 0 1 12-12h8a12 12 0 0 1 0 24h-8a12 12 0 0 1-12-12m96-64a12 12 0 0 0 12-12v-8a12 12 0 0 0-24 0v8a12 12 0 0 0 12 12M65.77 54.74a12 12 0 1 0 17-17l-5.66-5.65a12 12 0 0 0-17 17Zm116 3.52a12 12 0 0 0 8.49-3.52l5.65-5.65a12 12 0 0 0-17-17l-5.66 5.65a12 12 0 0 0 8.49 20.49ZM192 100a12 12 0 0 0 12 12h8a12 12 0 0 0 0-24h-8a12 12 0 0 0-12 12M88 112a12 12 0 0 0 12-12a28 28 0 0 1 56 0a12 12 0 0 0 24 0a52 52 0 0 0-104 0a12 12 0 0 0 12 12m154.36 110.05A12 12 0 0 1 232 228H24a12 12 0 0 1-10.45-17.9l43-76A12 12 0 0 1 67 128h122a12 12 0 0 1 10.45 6.1l43 76a12 12 0 0 1-.09 11.95M182 152h-42v12h48.82Zm-108 0l-6.78 12H116v-12Zm-29.43 52H116v-16H53.61Zm166.86 0l-9-16H140v16Z"/></svg>
+                    <p class="TopMenuBtnText">Panel</p>
+                </Button>
+                <Button class="TopMenuBtn" type="button" onclick="ChangeValue('ProductAddType', 'Inverter'); SelectValue('Searching', 'False'); RedirectForm('UpdateProfile', '/AddProduct', 'get')">
+                    <svg class="TopBtnIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M13.17 11.364v.136c.091-.051.091-.085 0-.136m-.675.18h.09l-.09-.18v.09zm.9-.09l-.045-.135v.135zm-.045.045l-.09-.18l.045.18zm-.405 0l.18-.045l-.135-.135l-.045.135zm-.27-.18l.135.225h.045v-.225l-.075.075l-.015-.075zm.81.09l.09-.135h-.09c-.046.131-.055.194.09.225c.138-.029.133-.09.135-.225l-.19.153zm.045-.27v-.09h-.27v.045zm-.585-.045l-.27-.045c.085.112.143.094.27.045M13.26 11c.183 0 .424-.033.36-.27l-.36.225zm-.315-.041l-.405-.225c.039.243.18.267.405.27zm.54-.54l-.27.495c.219-.085.444-.26.27-.495m-.495.495l-.315-.495c-.069.264.077.402.315.495m.09-.045l-.045-.63c-.306.1-.115.432 0 .63zm.09-.63l-.045.63c.167-.169.357-.527.045-.63M19.3 3.1a3.6 3.6 0 0 0-1.44-.225c-.838-.082-1.682-.1-2.52-.18c-2.1-.2-4.206-.247-6.3-.451a12 12 0 0 0-3.286-.165A2.42 2.42 0 0 0 4.18 3.232c-.09.18-.2.945-.367.945c-.03.2-.188.339-.219.54a9.5 9.5 0 0 0 .006 1.26c-.012 1.088.045 2.187 0 3.273c-.014.379-.171 1.563.345 1.588l-.046.539l-.268.5v6.391l.09.135c.284 0 .33.733.412.945a2.26 2.26 0 0 0 1.478 1.336a6.4 6.4 0 0 0 2.306-.037v.48h.788v-.588l.192-.02c.453-.044.9-.081 1.355-.115v.431h.993v-.5l.993-.065v.362h.885v-.422q.857-.059 1.715-.14c.1-.01.193-.018.29-.025V22h.911v-2.013c.561-.027 1.122-.047 1.68-.1a3.8 3.8 0 0 0 1.485-.233c1.343-.709 1.126-2.32 1.126-3.593c0-3.159.09-6.3.09-9.453c.002-1.267.188-2.801-1.12-3.508m-4.7 9.376l-3.388.082h-.036A1.48 1.48 0 0 1 9.7 11.077v-.146a1.477 1.477 0 0 1 1.5-1.477l3.388.065A1.485 1.485 0 0 1 16.041 11a1.47 1.47 0 0 1-1.441 1.473Z"/></svg>
+                    <p class="TopMenuBtnText">Inversor</p>
+                </Button>
+                <Button class="TopMenuBtn" type="button" onclick="ChangeValue('ProductAddType', 'Irrigation'); SelectValue('Searching', 'False'); RedirectForm('UpdateProfile', '/AddProduct', 'get')">
+                    <svg class="TopBtnIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 256 256"><path fill="currentColor" d="M205.41 159.07a60.9 60.9 0 0 1-31.83 8.86a71.7 71.7 0 0 1-27.36-5.66A55.55 55.55 0 0 0 136 194.51V224a8 8 0 0 1-8.53 8a8.18 8.18 0 0 1-7.47-8.25v-12.44l-38.62-38.62A52.5 52.5 0 0 1 63.44 176a45.8 45.8 0 0 1-23.92-6.67C17.73 156.09 6 125.62 8.27 87.79a8 8 0 0 1 7.52-7.52c37.83-2.23 68.3 9.46 81.5 31.25a46 46 0 0 1 6.45 28.48a4 4 0 0 1-6.89 2.43l-19.2-20.1a8 8 0 0 0-11.31 11.31l53.88 55.25c.06-.78.13-1.56.21-2.33a68.56 68.56 0 0 1 18.64-39.46l50.59-53.46a8 8 0 0 0-11.31-11.32l-49 51.82a4 4 0 0 1-6.78-1.74c-4.74-17.48-2.65-34.88 6.4-49.82c17.86-29.48 59.42-45.26 111.18-42.22a8 8 0 0 1 7.52 7.52c3 51.77-12.78 93.33-42.26 111.19"/></svg>
+                    <p class="TopMenuBtnText">Riego</p>
+                </Button>
+            </div>
+
+            <% if(Data.ProductType=='Panel'){ %>
+                <div style="display: flex;" id="PanelProduct" class="ClientType">
+                    <p class="Text">Panel</p>
+                    <input name="Coin" class="InputText" placeholder="Moneda" type="text" value="<%= Data.Coin %>">
+                    <!-- <input name="Total" class="InputText" placeholder="Total" type="text" value="<%= Data.Total %>"> -->
+                    <input name="Capacity" class="InputText" placeholder="Capacidad(W)" type="text" value="<%= Data.Capacity %>">
+                    <!-- <input name="DllW" class="InputText" placeholder="Dll/W" type="text" value="<%= Data.DllW %>"> -->
+                    <input name="PType" class="InputText" placeholder="Tipo de producto" type="text" value="<%= Data.PType %>">
+                </div>
+            <% } else if(Data.ProductType=='Inverter'){ %>
+                <div style="display: flex;" id="InverterProduct" class="ClientType">
+                    <p class="Text">Inversor</p>
+                    <input name="Coin" class="InputText" placeholder="Moneda" type="text" value="<%= Data.Coin %>">
+                    <!-- <input name="Total" class="InputText" placeholder="Total" type="text" value="<%= Data.Total %>"> -->
+                    <input name="Capacity" class="InputText" placeholder="Capacidad(W)" type="text" value="<%= Data.Capacity %>">
+                    <!-- <input name="DllW" class="InputText" placeholder="Dll/W" type="text" value="<%= Data.DllW %>"> -->
+                    <input name="MPPT" class="InputText" placeholder="MPPT" type="text" value="<%= Data.MPPT %>">
+                    <input name="PType" class="InputText" placeholder="Tipo de producto" type="text" value="<%= Data.PType %>">
+                </div>
+            <% } else if(Data.ProductType=='Irrigation'){ %>
+                <div style="display: flex;" id="IrrigationProduct" class="ClientType">
+                    <p class="Text">Riego</p>
+                    <input name="Existence" class="InputText" placeholder="Existencia" type="text" value="<%= Data.Existence %>">
+                </div>
+            <% } %>
+
+
+            
+            <p class="Text">Agrega tu contraseña para poder registrar el producto</p>
+            <div class="CenteredRow">
+                <input name="VerifyPass" id="VerifyPass" name="VerifyPass" class="InputText Passguord" placeholder="Verificar" type="password">
+                <button class="NoBtn" onclick="AlterVisiblePassword('VerifyPass')" type="button">
+                    <svg class="SuperSmallIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m3 5l16 16M11.148 9.123a3 3 0 0 1 3.722 3.752M8.41 6.878C12.674 4.762 17.267 6.47 21 12c-1.027 1.521-2.119 2.753-3.251 3.696m-2.509 1.59C11.076 19.142 6.631 17.38 3 12c1.01-1.496 2.083-2.713 3.196-3.65"/></svg>
+                </button>
+            </div>
+            
+            <div class="ButtonsSection">
+                <Button onclick="RedirectForm('UpdateProfile', '/NewProduct', 'post')" class="TopMenuBtn" type="button">
+                    <svg class="TopBtnIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="20" stroke-dashoffset="20" d="M10 5c1.66 0 3 1.34 3 3c0 1.66 -1.34 3 -3 3c-1.66 0 -3 -1.34 -3 -3c0 -1.66 1.34 -3 3 -3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.4s" values="20;0"/></path><path stroke-dasharray="36" stroke-dashoffset="36" d="M10 14c4 0 7 2 7 3v2h-14v-2c0 -1 3 -3 7 -3Z"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.5s" dur="0.5s" values="36;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M18 11h4"><animate fill="freeze" attributeName="stroke-dashoffset" begin="1.1s" dur="0.2s" values="6;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M20 9v4"><animate fill="freeze" attributeName="stroke-dashoffset" begin="1.3s" dur="0.2s" values="6;0"/></path></g></svg>
+                    <p class="TopMenuBtnText">Agregar</p>
+                </Button>
+            </div>
+            <p class="WarningText"><%= Warning %></p>
+        </div>
+
+
+
+
+        <% if(Searching=='True'){ %>
+            <div id="SelectSupplier" style="display: flex;" class="SelectSupplier">
+        <% }else if(Searching=='false'){ %>
+            <div id="SelectSupplier" style="display: none;" class="SelectSupplier">
+        <% } else { %>
+            <div id="SelectSupplier" style="display: none;" class="SelectSupplier">
+        <% } %>
+            <div class="Table">
+                <div class="TableTitleBG">
+                    <p class="TableTitle">Seleccionar usuario de proveedor</p>
+                    <div class="TitleTableActions">
+                        <div>
+                            <select name="Filter" id="Filter">
+
+                                <option class="Filter" value="Nombre" <%= Filter === 'Nombre' ? 'selected' : '' %>>Nombre</option>
+                                <option class="Filter" value="Telefono" <%= Filter === 'Telefono' ? 'selected' : '' %>>Telefono</option>
+                                <option class="Filter" value="Correo" <%= Filter === 'Correo' ? 'selected' : '' %>>Correo</option>
+                                <option class="Filter" value="Perfil" <%= Filter === 'Perfil' ? 'selected' : '' %>>Perfil</option>
+                                <option class="Filter" value="IdUsuario" <%= Filter === 'IdUsuario' ? 'selected' : '' %>>Fecha</option>
+                            </select>
+                            <select name="Order" id="Filter">
+                                <option class="Filter" value="ASC" <%= Order === 'ASC' ? 'selected' : '' %>>Ascendente</option>
+                                <option class="Filter" value="DESC"<%= Order === 'DESC' ? 'selected' : '' %>>Descendente</option>
+                            </select>
+                            
+                        </div>
+                        <div>
+                            <input name="Searcher" class="InputText Searcher" placeholder="Buscar" type="text" value="<%= Searcher %>">
+                            <input id="Searching" name="Searching" class="InputText Searcher" type="text" style="display: none;">
+                            <Button type="button" class="NoBtn" onclick="SelectValue('Searching', 'True'); RedirectForm('UpdateProfile', '/AddProduct', 'get')">
+                                <svg class="SearcherIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="40" stroke-dashoffset="40" d="M10.76 13.24c-2.34 -2.34 -2.34 -6.14 0 -8.49c2.34 -2.34 6.14 -2.34 8.49 0c2.34 2.34 2.34 6.14 0 8.49c-2.34 2.34 -6.14 2.34 -8.49 0Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="40;0"/></path><path stroke-dasharray="12" stroke-dashoffset="12" d="M10.5 13.5l-7.5 7.5"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.5s" dur="0.2s" values="12;0"/></path></g></svg>
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+                <table class="TableData">
+                    <tr class="InfoTitleBG">
+                        <td class="InfoTitleText ActionList">
+                            <!-- <div class="RowButtons">
+                                <Button class="SmallMenuBtn">
+                                    <svg class="SmallBtnIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 1024 1024"><path fill="currentColor" d="M77.248 415.04a64 64 0 0 1 90.496 0l226.304 226.304L846.528 188.8a64 64 0 1 1 90.56 90.496l-543.04 543.04l-316.8-316.8a64 64 0 0 1 0-90.496"/></svg>
+                                    <p class="SmallMenuBtnText">Seleccionar</p>
+                                </Button>
+                            </div> -->
+                        </td>
+                        <td class="InfoTitleText">Nombre</td>
+                        <td class="InfoTitleText">Apellido paterno</td>
+                        <td class="InfoTitleText">Apellido materno</td>
+                        <td class="InfoTitleText">Telefono</td>
+                        <td class="InfoTitleText">Correo</td>
+                        <td class="InfoTitleText">Contraseña</td>
+                        <td class="InfoTitleText">Perfil</td>
+                    </tr>
+                    <% Employees.forEach(function(employee) { %>
+                        <tr class="ElementOfList">
+                            <td class="InfoText ActionList">
+                                <div class="RowButtons">
+                                    <!-- <input class="CheckBox" type="checkbox"> -->
+                                    <form action="/employeedetails/<%= employee.IdUsuario %>" method="get">
+                                    </form>
+                                    <Button onclick="SelectValue('SelectSupplierBtn', '<%= employee.Correo %>'); SelectValue('Searching', 'false'); SelectValue('SelectSupplierId', '<%= employee.IdUsuario %>'); RedirectForm('UpdateProfile', '/AddProduct', 'get')" class="SmallMenuBtn" type="button">
+                                        <svg class="SmallBtnIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 1024 1024"><path fill="currentColor" d="M77.248 415.04a64 64 0 0 1 90.496 0l226.304 226.304L846.528 188.8a64 64 0 1 1 90.56 90.496l-543.04 543.04l-316.8-316.8a64 64 0 0 1 0-90.496"/></svg>
+                                        <p class="SmallMenuBtnText">Seleccionar</p>
+                                    </Button>
+                                </div>
+                            </td>
+                            <td class="InfoText"><%= employee.Nombre %></td>
+                            <td class="InfoText"><%= employee.ApellidoPaterno %></td>
+                            <td class="InfoText"><%= employee.ApellidoMaterno %></td>
+                            <td class="InfoText"><%= employee.Telefono %></td>
+                            <td class="InfoText"><%= employee.Correo %></td>
+                            <td class="InfoText"><%= employee.Contrasena %></td>
+                            <td class="InfoText"><%= employee.Perfil %></td>
+                        </tr>
+                    <% }) %>
+                </table>
+            </div>
+        </div>
+    </form>
+    
+</body>
+</html>

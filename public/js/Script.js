@@ -50,3 +50,9 @@ function RedirectForm(ElementId, action, method){
     Form.setAttribute('method', method)
     Form.submit();
 }
+
+function SelectValue(ElementId, Value){
+    var Element = document.getElementById(ElementId);
+
+    Element.setAttribute('value', Value);
+}

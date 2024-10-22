@@ -141,13 +141,14 @@ router.get('/clients', async function (req, res, next) {
     var ClientsFilter = req.cookies.ClientsF || 'IdCliente';
     var ClientsOrder = req.cookies.ClientsO || 'ASC';
     
-    var ClientType = req.query.ClientTypeF || ClientTypeFilter;
     var Filter = req.query.Filter || ClientsFilter;
+    var Order = req.query.Order || ClientsOrder;
+    var Searcher = req.query.Searcher || '';
+    
+    var ClientType = req.query.ClientTypeF || ClientTypeFilter;
     if((ClientType=='Panel'&&Filter=='ReferenciaP')||(ClientType=='Panel'&&Filter=='Fecha'||(ClientType=='Irrigation'&&Filter=='Correo')||(ClientType=='Irrigation'&&Filter=='NoServicioCFE'))){
         Filter='IdCliente';
     }
-    var Order = req.query.Order || ClientsOrder;
-    var Searcher = req.query.Searcher || '';
 
     res.cookie('ClientTypeF', ClientType, { maxAge: 900000, httpOnly: true });
     res.cookie('ClientsF', Filter, { maxAge: 900000, httpOnly: true });
@@ -303,7 +304,6 @@ router.get('/clients', async function (req, res, next) {
                 Searcher: Searcher,
                 ClientType : ClientType
             });
-             
             return;
         } else {
             res.render('Error', { Warning: 'No tienes acceso a esta sección' });
@@ -338,7 +338,7 @@ router.get('/employees', async function (req, res, next) {
 
     try {
         var result = await new sql.Request()
-            .input('Correo', sql.VarChar, User)
+            .input('Correo', User)
             .query("SELECT * FROM Usuario WHERE Correo = @Correo");
 
         var Res = result.recordset[0];
@@ -402,6 +402,254 @@ router.get('/employees', async function (req, res, next) {
         return;
     }
 });
+
+router.get('/Inventory', async function (req, res, next) {
+
+    var Profile = await VerifyLoggedUser(req, res);
+    
+    if(!Profile){
+        return;
+    }
+
+    var ProductTypeFilter = req.cookies.ProductTypeF || 'All';
+    var InvFilter = req.cookies.InvF || 'IdUsuario';
+    var InvOrder = req.cookies.InvO || 'ASC';
+    
+    var Filter = req.query.Filter || InvFilter;
+    var Order = req.query.Order || InvOrder;
+    var Searcher = req.query.Searcher || '';
+
+    var ProductType = req.query.ProductTypeF || ProductTypeFilter;
+
+    if((ProductType=='Panel'&&(Filter=='MPPT'||Filter=='Existencia'))||(ProductType=='Inverter'&&(Filter=='Existencia'))||(ProductType=='Irrigation'&&(Filter=='Moneda'||Filter=='Total'||Filter=='CapacidadW'||Filter=='DllW'||Filter=='MPPT'||Filter=='TipoProducto'))){
+        Filter='IdProducto';
+    }
+
+    res.cookie('ProductTypeF', ProductType, { maxAge: 900000, httpOnly: true });
+    res.cookie('InvF', Filter, { maxAge: 900000, httpOnly: true });
+    res.cookie('InvO', Order, { maxAge: 900000, httpOnly: true });
+
+    var User = req.cookies.User;
+    var result = await new sql.Request()
+            .input('Correo', User)
+            .query("SELECT * FROM Usuario WHERE Correo = @Correo");
+
+    var Res = result.recordset[0];
+
+    try{
+        if(Profile=='Admin'){
+            if(ProductType=='All'){
+
+                var Query = `SELECT I.IdProducto, I.Codigo, I.Concepto, I.Unidad, I.PUCosto, I.Proveedor, I.FechaActualizacion, I.IdUsuario, U.Nombre + ' ' + U.ApellidoPaterno + ' ' + U.ApellidoMaterno AS Usuario,
+		                    IGP.IdProductoP, COALESCE(IGP.Moneda, II.Moneda) AS Modeda, COALESCE(IGP.Total, II.Total) AS Total,
+		                    COALESCE(IGP.CapacidadW, II.CapacidadW) AS CapacidadW, COALESCE(IGP.DllW, II.DllW) AS DllW,
+		                    COALESCE(IGP.TipoProducto, II.TipoProducto) AS TipoProducto,
+		                    II.IdProductoI, II.MPPT,
+		                    IR.IdProductoR, IR.Existencia
+                            FROM Inventario I
+                            LEFT JOIN Usuario U ON I.IdUsuario = U.IdUsuario
+                            LEFT JOIN InventarioGeneralPanel IGP ON I.IdProducto = IGP.IdProducto
+                            LEFT JOIN InventarioInversor II ON I.IdProducto = II.IdProducto
+                            LEFT JOIN InventarioR IR ON I.IdProducto = IR.IdProducto`;
+                var Params = [];
+
+                // Verificar si hay algún término de búsqueda
+                if (Searcher) {
+                    // Dividir los términos por espacio
+                    var searchTerms = Searcher.split(' ');
+
+                    // Construir la consulta dinámica
+                    var whereClauses = [];
+                    
+                    searchTerms.forEach((term, index) => {
+                        var paramName = `Searcher${index}`;
+                        whereClauses.push(`(I.IdProducto LIKE @${paramName}
+                            OR I.Codigo LIKE @${paramName}
+                            OR I.Concepto LIKE @${paramName}
+                            OR I.Unidad LIKE @${paramName}
+                            OR I.PuCosto LIKE @${paramName}
+                            OR I.Proveedor LIKE @${paramName}
+                            OR I.FechaActualizacion LIKE @${paramName}
+                            OR U.Nombre LIKE @${paramName}
+                            OR U.ApellidoPaterno LIKE @${paramName}
+                            OR U.ApellidoMaterno LIKE @${paramName}
+                            OR COALESCE(IGP.Moneda, II.Moneda) LIKE @${paramName}
+                            OR COALESCE(IGP.Total, II.Total) LIKE @${paramName}
+                            OR COALESCE(IGP.CapacidadW, II.CapacidadW) LIKE @${paramName}
+                            OR COALESCE(IGP.DllW, II.DllW) LIKE @${paramName}
+                            OR COALESCE(IGP.TipoProducto, II.TipoProducto) LIKE @${paramName}
+                            OR IR.Existencia LIKE @${paramName})`);
+                        Params.push({ name: paramName, value: `%${term}%` });
+                    });
+
+                    // Unir las cláusulas WHERE con AND para que se busquen todos los términos
+                    Query += ' WHERE ' + whereClauses.join(' AND ');
+                }
+            }
+            else if(ProductType=='Panel'){
+
+                var Query = `SELECT I.IdProducto, I.Codigo, I.Concepto, I.Unidad, I.PUCosto, I.Proveedor, I.FechaActualizacion, I.IdUsuario, U.Nombre + ' ' + U.ApellidoPaterno + '' + U.ApellidoMaterno AS Usuario,
+		                IGP.IdProductoP, IGP.Moneda, IGP.Total, IGP.CapacidadW, IGP.DllW, IGP.TipoProducto
+                        FROM Inventario I
+                        LEFT JOIN Usuario U ON I.IdUsuario = U.IdUsuario
+                        LEFT JOIN InventarioGeneralPanel IGP ON I.IdProducto = IGP.IdProducto`;
+                var Params = [];
+
+                // Verificar si hay algún término de búsqueda
+                if (Searcher) {
+                    // Dividir los términos por espacio
+                    var searchTerms = Searcher.split(' ');
+
+                    // Construir la consulta dinámica
+                    var whereClauses = [];
+                    searchTerms.forEach((term, index) => {
+                        var paramName = `Searcher${index}`;
+                        whereClauses.push(`(I.IdProducto LIKE @${paramName}
+                            OR I.Codigo LIKE @${paramName}
+                            OR I.Concepto LIKE @${paramName}
+                            OR I.Unidad LIKE @${paramName}
+                            OR I.PuCosto LIKE @${paramName}
+                            OR I.Proveedor LIKE @${paramName}
+                            OR I.FechaActualizacion LIKE @${paramName}
+                            OR U.Nombre LIKE @${paramName}
+                            OR U.ApellidoPaterno LIKE @${paramName}
+                            OR U.ApellidoMaterno LIKE @${paramName}
+                            OR IGP.Moneda LIKE @${paramName}
+                            OR IGP.Total LIKE @${paramName}
+                            OR IGP.CapacidadW LIKE @${paramName}
+                            OR IGP.DllW LIKE @${paramName}
+                            OR IGP.TipoProducto LIKE @${paramName})`);
+                        Params.push({ name: paramName, value: `%${term}%` });
+                    });
+
+                    // Unir las cláusulas WHERE con AND para que se busquen todos los términos
+                    Query += ' WHERE ' + whereClauses.join(' AND ');
+                    
+                    Query += ' AND I.IdProducto = IGP.IdProducto';
+                }
+                else{
+                    Query += ' WHERE I.IdProducto = IGP.IdProducto';
+                }
+            }
+            else if(ProductType=='Inverter'){
+                var Query = `SELECT I.IdProducto, I.Codigo, I.Concepto, I.Unidad, I.PUCosto, I.Proveedor, I.FechaActualizacion, I.IdUsuario, U.Nombre + ' ' + U.ApellidoPaterno AS Usuario,
+		                    II.IdProductoI, II.Moneda, II.Total, II.CapacidadW, II.DllW, II.TipoProducto, II.MPPT
+                            FROM Inventario I
+                            LEFT JOIN Usuario U ON I.IdUsuario = U.IdUsuario
+                            LEFT JOIN InventarioInversor II ON I.IdProducto = II.IdProducto`;
+                var Params = [];
+
+                // Verificar si hay algún término de búsqueda
+                if (Searcher) {
+                    // Dividir los términos por espacio
+                    var searchTerms = Searcher.split(' ');
+
+                    // Construir la consulta dinámica
+                    var whereClauses = [];
+                    searchTerms.forEach((term, index) => {
+                        var paramName = `Searcher${index}`;
+                        whereClauses.push(`(I.IdProducto LIKE @${paramName}
+                            OR I.Codigo LIKE @${paramName}
+                            OR I.Concepto LIKE @${paramName}
+                            OR I.Unidad LIKE @${paramName}
+                            OR I.PuCosto LIKE @${paramName}
+                            OR I.Proveedor LIKE @${paramName}
+                            OR I.FechaActualizacion LIKE @${paramName}
+                            OR U.Nombre LIKE @${paramName}
+                            OR U.ApellidoPaterno LIKE @${paramName}
+                            OR U.ApellidoMaterno LIKE @${paramName}
+                            OR II.Moneda LIKE @${paramName}
+                            OR II.Total LIKE @${paramName}
+                            OR II.CapacidadW LIKE @${paramName}
+                            OR II.DllW LIKE @${paramName}
+                            OR II.MPPT LIKE @${paramName}
+                            OR II.TipoProducto LIKE @${paramName})`);
+                        Params.push({ name: paramName, value: `%${term}%` });
+                    });
+
+                    // Unir las cláusulas WHERE con AND para que se busquen todos los términos
+                    Query += ' WHERE ' + whereClauses.join(' AND ');
+                    Query += ' AND I.IdProducto = II.IdProducto';
+                }
+                else{
+                    Query += ' WHERE I.IdProducto = II.IdProducto';
+                }
+            }
+            else if(ProductType=='Irrigation'){
+
+                var Query = `SELECT I.IdProducto, I.Codigo, I.Concepto, I.Unidad, I.PUCosto, I.Proveedor, I.FechaActualizacion, I.IdUsuario, U.Nombre + ' ' + U.ApellidoPaterno AS Usuario,
+		                    IR.IdProductoR, IR.Existencia
+                            FROM Inventario I
+                            LEFT JOIN Usuario U ON I.IdUsuario = U.IdUsuario
+                            LEFT JOIN InventarioR IR ON I.IdProducto = IR.IdProducto`;
+                var Params = [];
+
+                // Verificar si hay algún término de búsqueda
+                if (Searcher) {
+                    // Dividir los términos por espacio
+                    var searchTerms = Searcher.split(' ');
+
+                    // Construir la consulta dinámica
+                    var whereClauses = [];
+                    searchTerms.forEach((term, index) => {
+                        var paramName = `Searcher${index}`;
+                        whereClauses.push(`(I.IdProducto LIKE @${paramName}
+                            OR I.Codigo LIKE @${paramName}
+                            OR I.Concepto LIKE @${paramName}
+                            OR I.Unidad LIKE @${paramName}
+                            OR I.PuCosto LIKE @${paramName}
+                            OR I.Proveedor LIKE @${paramName}
+                            OR I.FechaActualizacion LIKE @${paramName}
+                            OR U.Nombre LIKE @${paramName}
+                            OR U.ApellidoPaterno LIKE @${paramName}
+                            OR U.ApellidoMaterno LIKE @${paramName}
+                            OR IR.Existencia LIKE @${paramName})`);
+                        Params.push({ name: paramName, value: `%${term}%` });
+                    });
+
+                    // Unir las cláusulas WHERE con AND para que se busquen todos los términos
+                    Query += ' WHERE ' + whereClauses.join(' AND ');
+                    Query += ' AND I.IdProducto = IR.IdProducto';
+                }
+                else{
+                    Query += ' WHERE I.IdProducto = IR.IdProducto';
+                }
+            }
+            
+            // Ordenar los resultados
+            Query += ` ORDER BY ${Filter} ${Order}`;
+
+            // Preparar la consulta con parámetros
+            var request = new sql.Request();
+            Params.forEach(param => {
+                request.input(param.name, param.value);
+            });
+
+            result = await request.query(Query);
+            var Products = result.recordset;
+
+            res.render('Inventory', {
+                Name: Res.Nombre,
+                TableName: 'Inventario',
+                Products: Products,
+                Filter: Filter,
+                Order: Order, 
+                Searcher: Searcher,
+                ProductType : ProductType
+            });
+            return;
+        }
+        else{
+            res.render('404', {Warning:'No tienes acceso a esta seccion'});
+            return;
+        }
+    }
+    catch{
+        res.render('404', {Warning:'Error en el servidor intenta de nuevo mas tarde'});
+        return;
+    }
+
+})
 
 router.get('/employeedetails/:IdUsuario', async function (req, res, next) {
 
@@ -490,7 +738,7 @@ router.get('/ClientDetails/:IdCliente', async function (req, res, next) {
         res.redirect('/login');
         return;
     }
-})
+});
 
 router.get('/Addemployee', async function (req, res, next) {
 
@@ -534,7 +782,274 @@ router.get('/Addclient', async function (req, res, next) {
         });
         return;
     }
-})
+});
+
+router.get('/AddProduct', async function (req, res, next) {
+
+    var Profile = await VerifyLoggedUser(req, res);
+    
+    if(!Profile){
+        return;
+    }
+
+    var Searching = req.query.Searching;
+
+    var DataList
+
+    console.log(req.query.ProductType);
+    
+    DataList = {
+        ProductType: req.query.ProductType ||'Panel', 
+        Code: req.query.Code || '',
+        Concept: req.query.Concept || '',
+        Unity: req.query.Unity || '',
+        PUC: req.query.PUC || '',
+        Supplier: req.query.Supplier || '',
+        SupplierUserId: req.query.SupplierUserId || '',
+        SupplierUserMail: req.query.SupplierUserMail || 'Seleccionar proveedor',
+        Coin: req.query.Coin || '',
+        Total: req.query.Total || '',
+        Capacity: req.query.Capacity || '',
+        DllW: req.query.DllW || '',
+        PType: req.query.PType || '',
+        MPPT: req.query.MPPT || '',
+        Existence: req.query.Existence || ''
+    }
+
+    var EmployeesFilter = req.cookies.EmployeesF || 'IdUsuario';
+    var EmployeesOrder = req.cookies.EmployeesO || 'ASC';
+    
+    var Filter = req.query.Filter || EmployeesFilter;
+    var Order = req.query.Order || EmployeesOrder;
+    var Searcher = req.query.Searcher || '';
+
+    res.cookie('EmployeesF', Filter, { maxAge: 900000, httpOnly: true });
+    res.cookie('EmployeesO', Order, { maxAge: 900000, httpOnly: true });
+
+    try{
+
+        if(Profile!=='Admin'){
+            res.render('error', {
+                Warning: 'No tienes acceso a esta seccion'
+            });
+            return;
+        }
+        else{
+    
+            var Query = `SELECT * FROM Usuario`;
+            
+            var Params = [];
+            // Verificar si hay algún término de búsqueda
+            if (Searcher) {
+                // Dividir los términos por espacio
+                var searchTerms = Searcher.split(' ');
+    
+                // Construir la consulta dinámica
+                var whereClauses = [];
+                searchTerms.forEach((term, index) => {
+                    var paramName = `Searcher${index}`;
+                    whereClauses.push(`(Nombre LIKE @${paramName} OR ApellidoPaterno LIKE @${paramName} OR ApellidoMaterno LIKE @${paramName} OR Telefono LIKE @${paramName} OR Correo LIKE @${paramName} OR Perfil LIKE @${paramName})`);
+                    Params.push({ name: paramName, value: `%${term}%` });
+                });
+    
+                // Unir las cláusulas WHERE con AND para que se busquen todos los términos
+                Query += ' WHERE ' + whereClauses.join(' AND ');
+            }
+            
+            // Ordenar los resultados
+            Query += ` ORDER BY ${Filter} ${Order}`;
+    
+            // Preparar la consulta con parámetros
+            var request = new sql.Request();
+            Params.forEach(param => {
+                request.input(param.name, param.value);
+            });
+    
+            result = await request.query(Query);
+            var Users = result.recordset;
+    
+            res.render('InventoryAdd', {
+                Warning: '',
+                Employees: Users,
+                Filter: Filter,
+                Order: Order, 
+                Searcher: Searcher,
+                Searching: Searching,
+                Data: DataList
+            });
+            return;
+        }
+    }
+    catch{
+        res.render('404', {Warning: 'Error en el servidor, intenta de nuevo mas tarde'})
+    }
+});
+
+router.post('/NewProduct', async function (req, res, next) {
+    
+    var Profile = await VerifyLoggedUser(req, res);
+    
+    if(!Profile){
+        return;
+    }
+
+    DataList = {
+        ProductType: req.body.ProductType ||'Panel', 
+        Code: req.body.Code || '',
+        Concept: req.body.Concept || '',
+        Unity: req.body.Unity || '',
+        PUC: parseFloat(req.body.PUC) || 0,
+        Supplier: req.body.Supplier || '',
+        SupplierUserId: req.body.SupplierUserId || 'unselected',
+        SupplierUserMail: req.body.SupplierUserMail || 'Seleccionar proveedor',
+        Coin: req.body.Coin || '',
+        Total: parseFloat(req.body.Total) || 0,
+        Capacity: req.body.Capacity || '',
+        DllW: parseFloat(req.body.DllW) || 0,
+        PType: req.body.PType || '',
+        MPPT: parseFloat(req.body.MPPT) || 0,
+        Existence: req.query.Existence || ''
+    }
+
+    const User = req.cookies.User;
+    var result = await new sql.Request()
+    .input('Correo', User)
+    .query("SELECT * FROM Usuario WHERE Correo = @Correo");
+    var Pass = result.recordset[0].Contrasena;
+
+    var VerifyPass = req.body.VerifyPass;
+
+    if(Profile='Admin'){
+
+        if(DataList.Code.length>50){
+            res.render('error' , {Warning: 'El codigo no debe ser mayor a 50 caracteres'});
+            return;
+        }
+        else if(DataList.Concept.length>200){
+            res.render('error' , {Warning: 'El concepto no debe ser mayor a 200 caracteres'});
+            return;
+        }
+        else if(DataList.Unity.length > 10){
+            res.render('error' , {Warning: 'La unidad no debe ser mayor a 10 caracteres'});
+            return;
+        }
+        else if (isNaN(DataList.PUC) && !/^\d{1,10}(\.\d{1,2})?$/.test(DataList.PUC)) {
+            res.render('error', { Warning: 'El costo del precio unitario debe ser un número con hasta 10 dígitos y 2 decimales.' });
+            return;
+        }
+        else if(DataList.Supplier.length > 50){
+            res.render('error' , {Warning: 'El proveedor no debe ser mayor a 50 caracteres'});
+            return;
+        }
+
+        if(DataList.ProductType=='Panel'){
+            if(DataList.Coin.length > 5){
+                res.render('error' , {Warning: 'La moneda no debe ser mayor a 5 caracteres'});
+                return;
+            }
+            else if(DataList.Capacity.length > 20){
+                res.render('error' , {Warning: 'La capacidad en watts no debe ser mayor a 20 caracteres'});
+                return;
+            }
+            else if(DataList.PType.length > 50){
+                res.render('error' , {Warning: 'El tipo de producto no debe ser mayor a 50 caracteres'});
+                return;
+            }
+        }
+        else if(DataList.ProductType=='Inverter'){
+            if(DataList.Coin.length > 5){
+                res.render('error' , {Warning: 'La moneda no debe ser mayor a 5 caracteres'});
+                return;
+            }
+            else if(DataList.Capacity.length > 20){
+                res.render('error' , {Warning: 'La capacidad en watts no debe ser mayor a 20 caracteres'});
+                return;
+            }
+            else if(DataList.PType.length > 50){
+                res.render('error' , {Warning: 'El tipo de producto no debe ser mayor a 50 caracteres'});
+                return;
+            }
+            else if (isNaN(DataList.MPPT) && !/^\d{1,5}(\.\d{1,3})?$/.test(DataList.MPPT)) {
+                res.render('error', { Warning: 'El MPPT debe ser un número con hasta 5 dígitos y 3 decimales.' });
+                return;
+            }
+        }
+        else if(DataList.ProductType=='Irrigation'){
+            if(DataList.Existence.length>10){
+                res.render('error', { Warning: 'La existencia no debe ser mayor a 10 caracteres.' });
+                return;
+            }
+        }
+        
+        if(Pass!==VerifyPass){
+            res.render('error', {Warning:'Debes verificar tu contraseña para poder agregar'})
+            return;
+        }
+
+        console.log(DataList);
+
+        var NewProduct = await new sql.Request()
+        .input('Codigo', DataList.Code)
+        .input('Concepto', DataList.Concept)
+        .input('Unidad', DataList.Unity)
+        .input('PUCosto', DataList.PUC)
+        .input('Proveedor', DataList.Supplier)
+        .query(`INSERT INTO Inventario (Codigo, Concepto, Unidad, PUCosto, Proveedor)
+            OUTPUT INSERTED.IdProducto
+            VALUES (@Codigo, @Concepto, @Unidad, @PUCosto, @Proveedor)`);
+
+        var AddedProduct = NewProduct.recordset[0].IdProducto;
+
+        if(DataList.ProductType=='Panel'){
+            await new sql.Request()
+            .input('Moneda', DataList.Coin)
+            .input('CapacidadW', DataList.Capacity)
+            .input('TipoProducto', DataList.PType)
+            .input('IdProducto', AddedProduct)
+            .query(`INSERT INTO InventarioGeneralPanel (Moneda, CapacidadW, TipoProducto, IdProducto) VALUES (@Moneda, @CapacidadW, @TipoProducto, @IdProducto)`)
+        }
+        else if(DataList.ProductType=='Inverter'){
+            await new sql.Request()
+            .input('Moneda', DataList.Coin)
+            .input('CapacidadW', DataList.Capacity)
+            .input('MPPT', DataList.MPPT)
+            .input('TipoProducto', DataList.PType)
+            .input('IdProducto', AddedProduct)
+            .query(`INSERT INTO InventarioInversor (Moneda, CapacidadW, MPPT, TipoProducto, IdProducto) VALUES (@Moneda, @CapacidadW, @MPPT, @TipoProducto, @IdProducto)`)
+        }
+        else if(DataList.ProductType=='Irrigation'){
+            await new sql.Request()
+            .input('Existencia', DataList.Existence)
+            .input('IdProducto', AddedProduct)
+            .query(`INSERT INTO InventarioR (Existencia, IdProducto) VALUES (@Existencia, @IdProducto)`)
+        }
+
+        if(DataList.SupplierUserId!=='Unselected'){
+            await new sql.Request()
+            .input('IdUsuario', DataList.SupplierUserId)
+            .input('IdProducto', AddedProduct)
+            .query(`update Inventario SET IdUsuario = @IdUsuario WHERE IdProducto = @IdProducto`)
+        }
+
+        res.render('404', {Warning: 'Producto agregado correctamente'});
+        return;
+    }
+    else{
+        res.render('404', {Warning: 'No tienes acceso a esta seccion'});
+        return;
+    }
+
+
+    try{
+
+    }
+    catch{   
+        res.render('error', {
+            Warning: 'Error en el servidor, intenta de nuevo mas tarde'
+        });
+        return;
+    }
+});
 
 router.post('/NewClient', async function (req, res, next) {
 
@@ -544,74 +1059,73 @@ router.post('/NewClient', async function (req, res, next) {
         return;
     }
 
-    const User = req.cookies.User;
-
-    var Name = req.body.Name;
-    var State = req.body.State;
-    var Municipality = req.body.Municipality;
-    var Locality = req.body.Locality;
-    var Street = req.body.Street;
-    var Phone = req.body.Phone;
-    
-    var Mail = req.body.Mail;
-    var CFEService = req.body.CFEService;
-
-    var Reference = req.body.Reference;
-
-    var ClientType = req.body.ClientType;
-    var VerifyPass = req.body.VerifyPass;
-
-    var result = await new sql.Request()
-            .input('Correo', User)
-            .query("SELECT * FROM Usuario WHERE Correo = @Correo");
-
-    var Pass = result.recordset[0].Contrasena;
-
-
-    if(Name==''||State==''||Municipality==''||Locality==''||Street==''||Phone==''){
-        var EmptyInputs = "Los apartados "
-
-        if(Name==''){
-            EmptyInputs = EmptyInputs + 'Nombre ';
-        }
-        if(State==''){
-            EmptyInputs = EmptyInputs + 'Estado  ';
-        }
-        if(Municipality==''){
-            EmptyInputs = EmptyInputs + 'Muninipio '
-        }
-        if(Locality==''){
-            EmptyInputs = EmptyInputs + 'Localidad ';
-        }
-        if(Street==''){
-            EmptyInputs = EmptyInputs + 'Calle ';
-        }
-        if(Phone==''){
-            EmptyInputs = EmptyInputs + 'Telefono ';
-        }
-        EmptyInputs = EmptyInputs + "no deben quedar vacios"
-        res.render('Error', {
-            Warning: EmptyInputs
-        });
-        return;
-    }
-    else if(Name.length > 150){
-        res.render('error', {Warning: 'El nombre no debe ser mayor a 150 caracteres'});
-        return;
-    }
-    else if(State.length>50||Municipality.length>50||Locality.length>50||Street.length>50){
-        res.render('error', {Warning: 'Los apartados de estado, municipio, localidad y calle no deben sobrepasar 50 caracteres'});
-        return
-    }
-    else if(Phone.length>12){
-        res.render('error', {Warning: 'El telefono no debe pasar de 12 caracteres'});
-        return;
-    }
-    else if(Pass!=VerifyPass){
-        res.render('error', 'Debes verificar tu contraseña para poder agregar')
-        return;
-    }
     try{
+        var Name = req.body.Name;
+        var State = req.body.State;
+        var Municipality = req.body.Municipality;
+        var Locality = req.body.Locality;
+        var Street = req.body.Street;
+        var Phone = req.body.Phone;
+        
+        var Mail = req.body.Mail;
+        var CFEService = req.body.CFEService;
+    
+        var Reference = req.body.Reference;
+    
+        var ClientType = req.body.ClientType;
+        var VerifyPass = req.body.VerifyPass;
+    
+        const User = req.cookies.User;
+        var result = await new sql.Request()
+                .input('Correo', User)
+                .query("SELECT * FROM Usuario WHERE Correo = @Correo");
+    
+        var Pass = result.recordset[0].Contrasena;
+    
+    
+        if(Name==''||State==''||Municipality==''||Locality==''||Street==''||Phone==''){
+            var EmptyInputs = "Los apartados "
+    
+            if(Name==''){
+                EmptyInputs = EmptyInputs + 'Nombre ';
+            }
+            if(State==''){
+                EmptyInputs = EmptyInputs + 'Estado  ';
+            }
+            if(Municipality==''){
+                EmptyInputs = EmptyInputs + 'Muninipio '
+            }
+            if(Locality==''){
+                EmptyInputs = EmptyInputs + 'Localidad ';
+            }
+            if(Street==''){
+                EmptyInputs = EmptyInputs + 'Calle ';
+            }
+            if(Phone==''){
+                EmptyInputs = EmptyInputs + 'Telefono ';
+            }
+            EmptyInputs = EmptyInputs + "no deben quedar vacios"
+            res.render('Error', {
+                Warning: EmptyInputs
+            });
+            return;
+        }
+        else if(Name.length > 150){
+            res.render('error', {Warning: 'El nombre no debe ser mayor a 150 caracteres'});
+            return;
+        }
+        else if(State.length>50||Municipality.length>50||Locality.length>50||Street.length>50){
+            res.render('error', {Warning: 'Los apartados de estado, municipio, localidad y calle no deben sobrepasar 50 caracteres'});
+            return
+        }
+        else if(Phone.length>12){
+            res.render('error', {Warning: 'El telefono no debe pasar de 12 caracteres'});
+            return;
+        }
+        else if(Pass!=VerifyPass){
+            res.render('error',{Warning: 'Debes verificar tu contraseña para poder agregar'})
+            return;
+        }
         var NewClient = await new sql.Request()
         .input('Nombre', Name)
         .input('Estado', State)
@@ -669,7 +1183,7 @@ router.post('/NewClient', async function (req, res, next) {
         return;
     }
 
-})
+});
 
 router.post('/UpdateClient/:IdCliente', async function (req, res, next) {
 
@@ -828,7 +1342,7 @@ router.post('/UpdateClient/:IdCliente', async function (req, res, next) {
         return;
     }
 
-})
+});
 
 router.post("/Adduser", async function (req, res, next) {
 
@@ -930,7 +1444,7 @@ router.post("/Adduser", async function (req, res, next) {
     }
 
     
-})
+});
 
 router.post('/UpdateProfile', async function (req, res, next) {
 

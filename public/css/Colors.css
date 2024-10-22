@@ -1,11 +1,13 @@
 :root {
+
     --Black: #363F44;
     --DarkBlue: #215A6D; 
     --Blue: #3CA2A2;
+    --ClearBlue: #AAC6DA;
     --Green: #92C7A3;
     --White: #DFECE6;
+    
     --TranslucentBlack: #0000007e;
-    --ClearBlue: #AAC6DA;
     --Warning: yellow;
 
     --Border: 45px;

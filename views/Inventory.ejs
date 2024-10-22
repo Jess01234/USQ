@@ -11,46 +11,13 @@
 </head>
 <body>
     <div class="Window">
-        <form action="/Addclient" method="get">
-            <Button class="BtnAdd" type="submit" onclick="ShowWindow()">
+        <form action="/AddProduct" method="get">
+            <Button class="BtnAdd" type="submit">
                 <svg class="BtnIcon AddIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M10.5 20a1.5 1.5 0 0 0 3 0v-6.5H20a1.5 1.5 0 0 0 0-3h-6.5V4a1.5 1.5 0 0 0-3 0v6.5H4a1.5 1.5 0 0 0 0 3h6.5z"/></g></svg>
                 <p class="MenuBtnText AddIcon">Agregar</p>
             </Button>
         </form>
-        <!-- <div id="PopUp">
-            <Button class="BlackBG" onclick="HideWindow()">
-            </Button>
-            <div class="AddPopup">
-                <Div class="TitlePopUp">Nuevo empleado</Div>
-                <div class="PublicProfile">
-                    <div class="EditImg">
-                        <img class="PublicProfileIMG" src="/assets/Profile.png" alt="">
-                        <Button class="EditImgBtn">
-                            <svg class="BtnIcon AddIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M12 9c-1.626 0-3 1.374-3 3s1.374 3 3 3s3-1.374 3-3s-1.374-3-3-3"/><path fill="currentColor" d="M20 5h-2.586l-2.707-2.707A1 1 0 0 0 14 2h-4a1 1 0 0 0-.707.293L6.586 5H4c-1.103 0-2 .897-2 2v11c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2V7c0-1.103-.897-2-2-2m-8 12c-2.71 0-5-2.29-5-5s2.29-5 5-5s5 2.29 5 5s-2.29 5-5 5"/></svg>
-                        </Button>
-                    </div>
-                    <div class="Data">
-                        <input class="InputText" placeholder="Nombre" type="text">
-                        <input class="InputText" placeholder="Apellidos" type="text">
-                        <input class="InputText" placeholder="Perfil" list="ProfileOptions">
-                        <datalist id="ProfileOptions">
-                            <option value="Empleado">
-                            <option value="Administrador">
-                        </datalist>
-                    </div>
-                </div>
-                <div class="Data">
-                    <input class="InputText" placeholder="Apodo" type="text">
-                    <input class="InputText" placeholder="Telefono" type="text">
-                    <input class="InputText" placeholder="Correo" type="text">
-                    <input class="InputText" placeholder="Contraseña" type="password">
-                    <input class="InputText" placeholder="Descripción" type="text">
-                    <Button class="Btn">Guardar</Button>
-                </div>
-            </div>
-        </div> -->
     </div>
-
 
     <div class="ProfileImgBG">
         <form style="transition: 0.5s;" action="Profile" method="post">
@@ -109,36 +76,50 @@
         </div>
 
         <div class="Table">
-            <form action="/clients" method="get">
+            <form action="/Inventory" method="get">
                 <div class="TableTitleBG">
                     <p class="TableTitle"><%= TableName %></p>
                     <div class="TitleTableActions">
                         <div>
                             
-                            <select name="ClientTypeF" id="Filter">
-                                <option class="Filter" value="All" <%= ClientType === 'All' ? 'selected' : '' %>>Todo</option>
-                                <option class="Filter" value="Panel"<%= ClientType === 'Panel' ? 'selected' : '' %>>Panel</option>
-                                <option class="Filter" value="Irrigation"<%= ClientType === 'Irrigation' ? 'selected' : '' %>>Riego</option>
+                            <select name="ProductTypeF" id="Filter">
+                                <option class="Filter" value="All" <%= ProductType === 'All' ? 'selected' : '' %>>Todo</option>
+                                <option class="Filter" value="Panel"<%= ProductType === 'Panel' ? 'selected' : '' %>>Panel</option>
+                                <option class="Filter" value="Inverter"<%= ProductType === 'Inverter' ? 'selected' : '' %>>Inversor</option>
+                                <option class="Filter" value="Irrigation"<%= ProductType === 'Irrigation' ? 'selected' : '' %>>Riego</option>
                             </select>
                             <select name="Filter" id="Filter">
-                                <option class="Filter" value="IdCliente" <%= Filter === 'IdCliente' ? 'selected' : '' %>>Registro</option>
-                                <option class="Filter" value="Nombre" <%= Filter === 'Nombre' ? 'selected' : '' %>>Nombre</option>
-                                <option class="Filter" value="Estado" <%= Filter === 'Estado' ? 'selected' : '' %>>Estado</option>
-                                <option class="Filter" value="Municipio" <%= Filter === 'Municipio' ? 'selected' : '' %>>Municipio</option>
-                                <option class="Filter" value="Localidad" <%= Filter === 'Localidad' ? 'selected' : '' %>>Localidad</option>
-                                <option class="Filter" value="Calle" <%= Filter === 'Calle' ? 'selected' : '' %>>Calle</option>
-                                <option class="Filter" value="Telefono" <%= Filter === 'Telefono' ? 'selected' : '' %>>Telefono</option>
-                                <% if (ClientType == 'All') { %>
-                                    <option class="Filter" value="Correo" <%= Filter === 'Correo' ? 'selected' : '' %>>Correo</option>
-                                    <option class="Filter" value="NoServicioCFE" <%= Filter === 'NoServicioCFE' ? 'selected' : '' %>>No de Servicio CFE</option>
-                                    <option class="Filter" value="ReferenciaP" <%= Filter === 'ReferenciaP' ? 'selected' : '' %>>Referencia</option>
-                                    <option class="Filter" value="Fecha" <%= Filter === 'Fecha' ? 'selected' : '' %>>Fecha</option>
-                                <% } else if (ClientType == 'Panel') { %>
-                                    <option class="Filter" value="Correo" <%= Filter === 'Correo' ? 'selected' : '' %>>Correo</option>
-                                    <option class="Filter" value="NoServicioCFE" <%= Filter === 'NoServicioCFE' ? 'selected' : '' %>>No de Servicio CFE</option>
-                                <% } else if (ClientType == 'Irrigation') { %>
-                                    <option class="Filter" value="ReferenciaP" <%= Filter === 'ReferenciaP' ? 'selected' : '' %>>Referencia</option>
-                                    <option class="Filter" value="Fecha" <%= Filter === 'Fecha' ? 'selected' : '' %>>Fecha</option>
+                                <option class="Filter" value="IdProducto" <%= Filter === 'IdProducto' ? 'selected' : '' %>>Registro</option>
+                                <option class="Filter" value="Codigo" <%= Filter === 'Codigo' ? 'selected' : '' %>>Codigo</option>
+                                <option class="Filter" value="Concepto" <%= Filter === 'Concepto' ? 'selected' : '' %>>Concepto</option>
+                                <option class="Filter" value="Unidad" <%= Filter === 'Unidad' ? 'selected' : '' %>>Unidad</option>
+                                <option class="Filter" value="PUCosto" <%= Filter === 'PUCosto' ? 'selected' : '' %>>PUCosto</option>
+                                <option class="Filter" value="Proveedor" <%= Filter === 'Proveedor' ? 'selected' : '' %>>Proveedor</option>
+                                <option class="Filter" value="FechaActualizacion" <%= Filter === 'FechaActualizacion' ? 'selected' : '' %>>Fecha de actualizacion</option>
+                                <option class="Filter" value="Usuario" <%= Filter === 'Usuario' ? 'selected' : '' %>>Usuario</option>
+                                <% if (ProductType == 'All') { %>
+                                    <option class="Filter" value="Moneda" <%= Filter === 'Moneda' ? 'selected' : '' %>>Moneda</option>
+                                    <option class="Filter" value="Total" <%= Filter === 'Total' ? 'selected' : '' %>>Total</option>
+                                    <option class="Filter" value="CapacidadW" <%= Filter === 'CapacidadW' ? 'selected' : '' %>>Capacidad(W)</option>
+                                    <option class="Filter" value="DllW" <%= Filter === 'DllW' ? 'selected' : '' %>>Dll/W</option>
+                                    <option class="Filter" value="TipoProducto" <%= Filter === 'TipoProducto' ? 'selected' : '' %>>Tipo de producto</option>
+                                    <option class="Filter" value="MPPT" <%= Filter === 'MPPT' ? 'selected' : '' %>>MPPT</option>
+                                    <option class="Filter" value="Existencia" <%= Filter === 'Existencia' ? 'selected' : '' %>>Existencia</option>
+                                <% } else if (ProductType == 'Panel') { %>
+                                    <option class="Filter" value="Moneda" <%= Filter === 'Moneda' ? 'selected' : '' %>>Moneda</option>
+                                    <option class="Filter" value="Total" <%= Filter === 'Total' ? 'selected' : '' %>>Total</option>
+                                    <option class="Filter" value="CapacidadW" <%= Filter === 'CapacidadW' ? 'selected' : '' %>>Capacidad(W)</option>
+                                    <option class="Filter" value="DllW" <%= Filter === 'DllW' ? 'selected' : '' %>>Dll/W</option>
+                                    <option class="Filter" value="TipoProducto" <%= Filter === 'TipoProducto' ? 'selected' : '' %>>Tipo de producto</option>
+                                <% } else if (ProductType == 'Inverter') { %>
+                                    <option class="Filter" value="Moneda" <%= Filter === 'Moneda' ? 'selected' : '' %>>Moneda</option>
+                                    <option class="Filter" value="Total" <%= Filter === 'Total' ? 'selected' : '' %>>Total</option>
+                                    <option class="Filter" value="CapacidadW" <%= Filter === 'CapacidadW' ? 'selected' : '' %>>CapacidadW</option>
+                                    <option class="Filter" value="DllW" <%= Filter === 'DllW' ? 'selected' : '' %>>Dll/W</option>
+                                    <option class="Filter" value="TipoProducto" <%= Filter === 'TipoProducto' ? 'selected' : '' %>>Tipo de producto</option>
+                                    <option class="Filter" value="MPPT" <%= Filter === 'MPPT' ? 'selected' : '' %>>MPPT</option>
+                                <% } else if(ProductType == 'Irrigation'){ %>
+                                    <option class="Filter" value="Existencia" <%= Filter === 'Existencia' ? 'selected' : '' %>>Existencia</option>
                                 <% } %>
                             </select>
                             <select name="Order" id="Filter">
@@ -166,31 +147,44 @@
                             </Button>
                         </div> -->
                     </td>
-                    <td class="InfoTitleText">Nombre</td>
-                    <td class="InfoTitleText">Estado</td>
-                    <td class="InfoTitleText">Municipio</td>
-                    <td class="InfoTitleText">Localidad</td>
-                    <td class="InfoTitleText">Calle</td>
-                    <td class="InfoTitleText">Telefono</td>
-                    <%if(ClientType=='All'){%>
-                        <td class="InfoTitleText">Correo</td>
-                        <td class="InfoTitleText">No de servicio CFE</td>
-                        <td class="InfoTitleText">Referencia</td>
-                        <td class="InfoTitleText">Fecha</td>
-                    <%} else if(ClientType=='Panel'){%>
-                        <td class="InfoTitleText">Correo</td>
-                        <td class="InfoTitleText">No de servicio CFE</td>
-                    <%} else if(ClientType=='Irrigation'){%>
-                        <td class="InfoTitleText">Referencia</td>
-                        <td class="InfoTitleText">Fecha</td>
+                    <td class="InfoTitleText">Codigo</td>
+                    <td class="InfoTitleText">Concepto</td>
+                    <td class="InfoTitleText">Unidad</td>
+                    <td class="InfoTitleText">PUCosto</td>
+                    <td class="InfoTitleText">Proveedor</td>
+                    <td class="InfoTitleText">Fecha de actualizacion</td>
+                    <td class="InfoTitleText">Usuario</td>
+                    <%if(ProductType=='All'){%>
+                        <td class="InfoTitleText">Moneda</td>
+                        <td class="InfoTitleText">Total</td>
+                        <td class="InfoTitleText">Capacidad(W)</td>
+                        <td class="InfoTitleText">Dll/W</td>
+                        <td class="InfoTitleText">Tipo de producto</td>
+                        <td class="InfoTitleText">MPPT</td>
+                        <td class="InfoTitleText">Existencia</td>
+                    <%} else if(ProductType=='Panel'){%>
+                        <td class="InfoTitleText">Moneda</td>
+                        <td class="InfoTitleText">Total</td>
+                        <td class="InfoTitleText">Capacidad(W)</td>
+                        <td class="InfoTitleText">Dll/W</td>
+                        <td class="InfoTitleText">Tipo de producto</td>
+                    <%} else if(ProductType=='Inverter'){%>
+                        <td class="InfoTitleText">Moneda</td>
+                        <td class="InfoTitleText">Total</td>
+                        <td class="InfoTitleText">Capacidad(W)</td>
+                        <td class="InfoTitleText">Dll/W</td>
+                        <td class="InfoTitleText">Tipo de producto</td>
+                        <td class="InfoTitleText">MPPT</td>
+                    <%} else if(ProductType=='Irrigation'){%>
+                        <td class="InfoTitleText">Existencia</td>
                     <%}%>
                 </tr>
-                <% Clients.forEach(function(Client) { %>
+                <% Products.forEach(function(Product) { %>
                     <tr class="ElementOfList">
                         <td class="InfoText ActionList">
                             <div class="RowButtons">
                                 <!-- <input class="CheckBox" type="checkbox"> -->
-                                <form action="/clientdetails/<%= Client.IdCliente %>" method="get">
+                                <form action="/ProductDetails/<%= Product.IdProducto %>" method="get">
                                     <Button class="SmallMenuBtn" type="submit">
                                         <svg class="SmallBtnIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M7 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-1"/><path d="M20.385 6.585a2.1 2.1 0 0 0-2.97-2.97L9 12v3h3zM16 5l3 3"/></g></svg>
                                         <p class="SmallMenuBtnText">Editar</p>
@@ -198,23 +192,36 @@
                                 </form>
                             </div>
                         </td>
-                        <td class="InfoText"><%= Client.Nombre %></td>
-                        <td class="InfoText"><%= Client.Estado %></td>
-                        <td class="InfoText"><%= Client.Municipio %></td>
-                        <td class="InfoText"><%= Client.Localidad %></td>
-                        <td class="InfoText"><%= Client.Calle %></td>
-                        <td class="InfoText"><%= Client.Telefono %></td>
-                        <%if(ClientType=='All'){%>
-                            <td class="InfoText"><%= Client.Correo %></td>
-                            <td class="InfoText"><%= Client.NoServicioCFE %></td>
-                            <td class="InfoText"><%= Client.ReferenciaP %></td>
-                            <td class="InfoText"><%= Client.Fecha %></td>
-                        <%} else if(ClientType=='Panel'){%>
-                            <td class="InfoText"><%= Client.Correo %></td>
-                            <td class="InfoText"><%= Client.NoServicioCFE %></td>
-                        <%} else if(ClientType=='Irrigation'){%>
-                            <td class="InfoText"><%= Client.ReferenciaP %></td>
-                            <td class="InfoText"><%= Client.Fecha %></td>
+                        <td class="InfoText"><%= Product.Codigo %></td>
+                        <td class="InfoText"><%= Product.Concepto %></td>
+                        <td class="InfoText"><%= Product.Unidad %></td>
+                        <td class="InfoText"><%= Product.PUCosto %></td>
+                        <td class="InfoText"><%= Product.Proveedor %></td>
+                        <td class="InfoText"><%= Product.FechaActualizacion %></td>
+                        <td class="InfoText"><%= Product.Usuario %></td>
+                        <%if(ProductType=='All'){%>
+                            <td class="InfoText"><%= Product.Moneda %></td>
+                            <td class="InfoText"><%= Product.Total %></td>
+                            <td class="InfoText"><%= Product.CapacidadW %></td>
+                            <td class="InfoText"><%= Product.DllW %></td>
+                            <td class="InfoText"><%= Product.TipoProducto %></td>
+                            <td class="InfoText"><%= Product.MPPT %></td>
+                            <td class="InfoText"><%= Product.Existencia %></td>
+                        <%} else if(ProductType=='Panel'){%>
+                            <td class="InfoText"><%= Product.Moneda %></td>
+                            <td class="InfoText"><%= Product.Total %></td>
+                            <td class="InfoText"><%= Product.CapacidadW %></td>
+                            <td class="InfoText"><%= Product.DllW %></td>
+                            <td class="InfoText"><%= Product.TipoProducto %></td>
+                        <%} else if(ProductType=='Inverter'){%>
+                            <td class="InfoText"><%= Product.Moneda %></td>
+                            <td class="InfoText"><%= Product.Total %></td>
+                            <td class="InfoText"><%= Product.CapacidadW %></td>
+                            <td class="InfoText"><%= Product.DllW %></td>
+                            <td class="InfoText"><%= Product.TipoProducto %></td>
+                            <td class="InfoText"><%= Product.MPPT %></td>
+                        <%} else if(ProductType=='Irrigation'){%>
+                            <td class="InfoText"><%= Product.Existencia %></td>
                         <%}%>
                     </tr>
                 <% }) %>
